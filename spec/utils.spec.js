@@ -121,21 +121,23 @@ describe('formatComments', () => {
   it('when passed an empty array, and no refObj, return a new empty array', () => {
     expect(formatComments([])).to.deep.equal([])
   });
-  it('when passed an array containing a comments object, and an article reference, format the object so that the created_by & belongs_to properties becomes author & article_id, respectively', () => {
-    expect(formatComments([{
+  it('when passed an array containing a comments object, and an article reference, format the object so that: The created_by & belongs_to properties becomes author & article_id, The article_id value becomes equal to the value in the reference object, and the created_at timestamp is changed to JS date object', () => {
+    const refObj = { "They're not exactly dogs, are they?": 1 };
+    const input = [{
       body:
         "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
       belongs_to: "They're not exactly dogs, are they?",
       created_by: 'butter_bridge',
       votes: 16,
       created_at: 1511354163389
-    }], { "They're not exactly dogs, are they?": 1 })).to.deep.equal([{
+    }]
+    expect(formatComments(input, refObj)).to.deep.equal([{
       body:
         "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
       article_id: 1,
       author: 'butter_bridge',
       votes: 16,
-      created_at: 1511354163389
+      created_at: new Date(1511354163389)
     }])
   });
 });
