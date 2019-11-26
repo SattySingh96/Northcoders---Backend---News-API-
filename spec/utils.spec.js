@@ -71,7 +71,7 @@ describe('formatDates', () => {
 });
 
 describe('makeRefObj', () => {
-  it('When passed an array containing an empty object, return a new empty object', () => {
+  it('When passed an empty array, return a new empty object', () => {
     expect(makeRefObj([])).to.deep.equal({});
   });
   it('When passed an array containing a single object, return a reference object with title & article_id as the key:value pair', () => {
@@ -117,4 +117,25 @@ describe('makeRefObj', () => {
   });
 });
 
-describe('formatComments', () => { });
+describe('formatComments', () => {
+  it('when passed an empty array, and no refObj, return a new empty array', () => {
+    expect(formatComments([])).to.deep.equal([])
+  });
+  it('when passed an array containing a comments object, and an article reference, format the object so that the created_by & belongs_to properties becomes author & article_id, respectively', () => {
+    expect(formatComments([{
+      body:
+        "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+      belongs_to: "They're not exactly dogs, are they?",
+      created_by: 'butter_bridge',
+      votes: 16,
+      created_at: 1511354163389
+    }], { "They're not exactly dogs, are they?": 1 })).to.deep.equal([{
+      body:
+        "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+      article_id: 1,
+      author: 'butter_bridge',
+      votes: 16,
+      created_at: 1511354163389
+    }])
+  });
+});

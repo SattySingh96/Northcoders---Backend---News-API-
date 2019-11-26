@@ -20,6 +20,16 @@ exports.makeRefObj = (list, key, value) => {
 
 
 exports.formatComments = (comments, articleRef) => {
+  if (comments.length === 0) return comments;
+  else {
+    return comments.map((commentObj) => {
+      commentObj['belongs_to'] = articleRef[commentObj['belongs_to']]
 
+      delete Object.assign(commentObj, { ['author']: commentObj['created_by'] })['created_by'];
 
+      delete Object.assign(commentObj, { ['article_id']: commentObj['belongs_to'] })['belongs_to'];
+
+      return commentObj;
+    });
+  }
 };
