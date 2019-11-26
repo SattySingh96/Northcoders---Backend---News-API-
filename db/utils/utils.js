@@ -19,4 +19,7 @@ exports.makeRefObj = (list, key, value) => {
 };
 
 
-exports.formatComments = (comments, articleRef) => { };
+exports.formatComments = (comments, articleRef) => {
+
+
+};
