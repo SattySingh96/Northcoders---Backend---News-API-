@@ -27,6 +27,14 @@ describe('app', () => {
               expect(topics[0]).keys("slug", "description");
             });
         });
+        it('status 404: Invalid path/url', () => {
+          return request(app)
+            .get('/api/topicz')
+            .expect(404)
+            .then(({ body: { topics } }) => {
+              expect()
+            });
+        });
       });
     });
   });
