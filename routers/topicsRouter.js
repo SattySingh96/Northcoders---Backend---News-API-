@@ -1,8 +1,8 @@
 const topicsRouter = require('express').Router();
-//imprt controllers here
+const { getAllTopics } = require('../controllers')
 
 
-
+topicsRouter.route('/').get(getAllTopics)
 
 
 
