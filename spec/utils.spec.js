@@ -117,7 +117,7 @@ describe('makeRefObj', () => {
   });
 });
 
-describe('formatComments', () => {
+describe.only('formatComments', () => {
   it('when passed an empty array, and no refObj, return a new empty array', () => {
     expect(formatComments([])).to.deep.equal([])
   });
@@ -139,5 +139,58 @@ describe('formatComments', () => {
       votes: 16,
       created_at: new Date(1511354163389)
     }])
+  });
+  it('when passed an array containing multiple comments object, and an article reference, format all the objects so that: The created_by & belongs_to properties becomes author & article_id, The article_id value becomes equal to the value in the reference object, and the created_at timestamp is changed to JS date object', () => {
+    const refObj = { "They're not exactly dogs, are they?": 1, 'Living in the shadow of a great man': 2 };
+    const input = [{
+      body:
+        "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+      belongs_to: "They're not exactly dogs, are they?",
+      created_by: 'butter_bridge',
+      votes: 16,
+      created_at: 1511354163389
+    },
+    {
+      body:
+        'The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky.',
+      belongs_to: 'Living in the shadow of a great man',
+      created_by: 'butter_bridge',
+      votes: 14,
+      created_at: 1479818163389,
+    },
+    {
+      body:
+        'Replacing the quiet elegance of the dark suit and tie with the casual indifference of these muted earth tones is a form of fashion suicide, but, uh, call me crazy — onyou it works.',
+      belongs_to: 'Living in the shadow of a great man',
+      created_by: 'icellusedkars',
+      votes: 100,
+      created_at: 1448282163389,
+    }
+    ]
+    expect(formatComments(input, refObj)).to.deep.equal([{
+      body:
+        "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+      article_id: 1,
+      author: 'butter_bridge',
+      votes: 16,
+      created_at: new Date(1511354163389)
+    },
+    {
+      body:
+        'The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky.',
+      article_id: 2,
+      author: 'butter_bridge',
+      votes: 14,
+      created_at: new Date(1479818163389)
+    },
+    {
+      body:
+        'Replacing the quiet elegance of the dark suit and tie with the casual indifference of these muted earth tones is a form of fashion suicide, but, uh, call me crazy — onyou it works.',
+      article_id: 2,
+      author: 'icellusedkars',
+      votes: 100,
+      created_at: new Date(1448282163389)
+    }
+    ])
   });
 });

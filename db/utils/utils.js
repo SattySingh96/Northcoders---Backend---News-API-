@@ -23,11 +23,13 @@ exports.formatComments = (comments, articleRef) => {
   if (comments.length === 0) return comments;
   else {
     return comments.map((commentObj) => {
-      commentObj['belongs_to'] = articleRef[commentObj['belongs_to']]
-      delete Object.assign(commentObj, { ['author']: commentObj['created_by'] })['created_by'];
-      delete Object.assign(commentObj, { ['article_id']: commentObj['belongs_to'] })['belongs_to'];
-      commentObj.created_at = new Date(commentObj.created_at);
-      return commentObj;
+      const newCommentObj = { ...commentObj };
+      newCommentObj.article_id = articleRef[newCommentObj.belongs_to]
+      delete newCommentObj.belongs_to;
+      newCommentObj.author = newCommentObj.created_by
+      delete newCommentObj.created_by
+      newCommentObj.created_at = new Date(newCommentObj.created_at);
+      return newCommentObj;
     });
   }
 };

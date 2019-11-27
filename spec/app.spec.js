@@ -94,8 +94,19 @@ describe('app', () => {
               .get('/api/articles/1')
               .expect(200)
               .then(({ body: { articles } }) => {
-                console.log(articles);
+                console.log(articles)
+                expect(articles).keys('article_id', 'votes', 'body', 'author', 'created_at', 'topic', 'title', 'comment_count');
+                expect
               });
+          });
+          it('status 200: return object with key of comment-count, that has value of 13', () => {
+            return request(app)
+              .get('/api/articles/1')
+              .expect(200)
+              .then(({ body: { articles } }) => {
+                expect(articles.comment_count).is.equal('13')
+              });
+
           });
         });
         //come back to patch

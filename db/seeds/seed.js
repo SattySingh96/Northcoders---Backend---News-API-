@@ -5,9 +5,13 @@ const {
   userData
 } = require('../data/index.js');
 
+
+
 const { formatDates, formatComments, makeRefObj } = require('../utils/utils');
 
+
 exports.seed = function (knex) {
+
   return knex.migrate
     .rollback()
     .then(() => {
@@ -26,7 +30,7 @@ exports.seed = function (knex) {
         .returning('*');
     })
     .then((articleRows) => {
-      const articleRef = makeRefObj(articleRows);
+      const articleRef = makeRefObj(articleRows, 'title', 'article_id');
       const formattedComments = formatComments(commentData, articleRef);
       return knex('comments').insert(formattedComments);
     });
