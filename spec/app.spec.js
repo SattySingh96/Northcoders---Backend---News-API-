@@ -67,7 +67,6 @@ describe('app', () => {
               .get('/api/users/butter_bridge')
               .expect(200)
               .then(({ body: { user } }) => {
-                console.log(user)
                 expect(user).keys('username', 'avatar_url', 'name')
                 expect(user).to.be.an('object')
               })
@@ -115,8 +114,8 @@ describe('app', () => {
               .patch('/api/articles/1')
               .send({ 'inc-votes': 1 })
               .expect(200)
-              .then(() => {
-
+              .then(({ body: { patchedBody } }) => {
+                expect(patchedBody.votes).to.equal(101)
               });
           });
         });

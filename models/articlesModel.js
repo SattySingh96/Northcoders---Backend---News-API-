@@ -17,5 +17,5 @@ exports.updateArticleVotesById = (id, patchInfo) => {
   return connection('articles')
     .where('article_id', id)
     .increment('votes', patchInfo)
-    .returning('*')
+    .returning('*');
 };

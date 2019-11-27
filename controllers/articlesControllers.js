@@ -14,6 +14,6 @@ exports.patchArticleVoteById = (req, res, next) => {
   console.log("patching votes")
   updateArticleVotesById(req.params.article_id, req.body['inc-votes'])
     .then((patchedBody) => {
-      res.status(200).send({ patchedBody })
+      res.status(200).send({ patchedBody: patchedBody[0] })
     });
 }
