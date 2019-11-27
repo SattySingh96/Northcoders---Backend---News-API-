@@ -109,17 +109,16 @@ describe('app', () => {
 
           });
         });
-        //come back to patch
         describe('PATCH', () => {
           it('status 200: return the patched article object', () => {
             return request(app)
               .patch('/api/articles/1')
-              .send({})
+              .send({ 'inc-votes': 1 })
               .expect(200)
-              .then(() => { })
+              .then(() => {
 
-          })
-
+              });
+          });
         });
       });
     });

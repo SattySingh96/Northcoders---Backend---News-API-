@@ -5,6 +5,8 @@ const { handle404s } = require('./errors/index')
 //---Set up app---
 const app = express();
 
+app.use(express.json())
+
 //---Set up apiRouter---
 app.use('/api', apiRouter)
 
