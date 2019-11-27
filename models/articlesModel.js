@@ -6,4 +6,5 @@ exports.fetchArticlesById = (id) => {
     .select("*")
     .from('articles')
     .where('article_id', id)
+    .leftJoin('comments', 'articles.article_id', 'comments.article_id')
 };

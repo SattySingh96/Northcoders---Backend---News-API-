@@ -3,9 +3,9 @@ const { fetchArticlesById } = require('../models/articlesModel')
 
 exports.getArticlesById = (req, res, next) => {
   console.log('sending articles')
-  fetchArticlesById(req.params)
+  fetchArticlesById(req.params.article_id)
     .then((articles) => {
-      res.sendStatus(200)
+      res.status(200).send({ articles: articles[0] })
     })
     .catch(next);
 }

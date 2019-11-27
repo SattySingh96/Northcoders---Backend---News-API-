@@ -90,23 +90,27 @@ describe('app', () => {
         });
         describe('GET', () => {
           it('status 200: return object with 8 keys', () => {
-            //Comeback to this -- requires advanced sql query to get comment count
+            return request(app)
+              .get('/api/articles/1')
+              .expect(200)
+              .then(({ body: { articles } }) => {
+                console.log(articles);
+              });
           });
         });
+        //come back to patch
         describe('PATCH', () => {
           it('status 200: return the patched article object', () => {
             return request(app)
               .patch('/api/articles/1')
-              .send()
+              .send({})
               .expect(200)
               .then(() => { })
 
           })
 
-        }
-
-        }
+        });
       });
+    });
   });
-});
 });
