@@ -269,7 +269,7 @@ describe('app', () => {
           return Promise.all(methods);
         });
         describe('GET', () => {
-          it('Status 200: return an array of articles objects, each having 8 keys', () => {
+          it('Status 200: Return an array of articles objects, each having 8 keys', () => {
             return request(app)
               .get('/api/articles')
               .expect(200)
@@ -277,7 +277,7 @@ describe('app', () => {
                 expect(articles[0]).keys('article_id', 'title', 'body', 'votes', 'topic', 'author', 'created_at', 'comment_count')
               });
           });
-          it('Status 200: comment_count key value should be equal to the number of comments refrenced on the article', () => {
+          it('Status 200: Comment_count key value should be equal to the number of comments refrenced on the article', () => {
             return request(app)
               .get('/api/articles')
               .expect(200)
@@ -285,7 +285,7 @@ describe('app', () => {
                 expect(articles[3].comment_count).equals('2')
               });
           });
-          it.only('Status 200 - If no sort_by query is given, sort descendingly by "created_at" by default', () => {
+          it('Status 200 - If no sort_by query is given, sort descendingly by "created_at" by default', () => {
             return request(app)
               .get('/api/articles')
               .expect(200)
@@ -293,6 +293,26 @@ describe('app', () => {
                 expect(articles).to.be.sortedBy('created_at');
               });
           });
+          it('Status 200 - If given a sort_by query, sort comments by this criteria', () => {
+            return request(app)
+              .get('/api/articles?sort_by=author')
+              .expect(200)
+              .then(({ body: { articles } }) => {
+                console.log(articles)
+                expect(articles).to.be.sortedBy('author', {
+                  descending: false
+                });
+              });
+          });
+          it('Status 400 - If given an invalid sort_by column query', () => {
+            return request(app)
+              .get('/api/articles/1/comments?sort_by=title')
+              .expect(400)
+              .then(({ body: { msg } }) => {
+                expect(msg).to.equal('bad request')
+              });
+          });
+
         });
       });
     });
