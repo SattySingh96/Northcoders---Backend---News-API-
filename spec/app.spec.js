@@ -257,6 +257,17 @@ describe('app', () => {
         });
       });
       describe('/articles', () => {
+        it('Status 405: methods not allowed, Delete, Patch, Post & Put', () => {
+          const methods = ['delete', 'patch', 'post', 'put'].map((method) => {
+            return request(app)
+            [method]('/api/articles')
+              .expect(405)
+              .then(({ body: { msg } }) => {
+                expect(msg).to.equal('method not allowed on this path');
+              });
+          });
+          return Promise.all(methods);
+        });
         describe('GET', () => {
           it('Status 200: return an array of articles objects, with 8 keys', () => {
             return request(app)
