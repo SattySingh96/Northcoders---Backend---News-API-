@@ -178,6 +178,15 @@ describe('app', () => {
                 expect(msg).to.equal('bad request');
               });
           });
+          it('status 400 - Data types of column values do not match schema', () => {
+            return request(app)
+              .post('/api/articles/1/comments')
+              .send({ username: 'butter_bridge', comment_text: 14211 })
+              .expect(400)
+              .then(({ body: { msg } }) => {
+                expect(msg).to.equal('bad request');
+              });
+          });
           it('status 422 - article_id given is non-existant', () => {
             return request(app)
               .post('/api/articles/9999/comments')

@@ -1,5 +1,5 @@
 // --- handlecustoms ???? ---
-exports.customHandles = (err, req, res, next) => {
+exports.customHandlers = (err, req, res, next) => {
   if (err.status) res.status(err.status)
     .send({ msg: err.msg });
   else next(err)
