@@ -169,6 +169,15 @@ describe('app', () => {
                 expect(msg).to.equal('bad request');
               });
           });
+          it('status 400 -Non-existant column included in the post body', () => {
+            return request(app)
+              .post('/api/articles/1/comments')
+              .send({ username: 'butter_bridge', comment_text: 'test-comment' })
+              .expect(400)
+              .then(({ body: { msg } }) => {
+                expect(msg).to.equal('bad request');
+              });
+          });
         });
       });
     });
