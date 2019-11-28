@@ -316,6 +316,14 @@ describe('app', () => {
                 expect(comments).to.be.descendingBy('created_at')
               });
           });
+          it('Status 200 - If given an order query of asc/desc, order by asc/desc', () => {
+            return request(app)
+              .get('/api/articles?order=asc')
+              .expect(200)
+              .then(({ body: { articles } }) => {
+                expect(articles).to.be.ascendingBy('created_at')
+              });
+          });
         });
       });
     });
