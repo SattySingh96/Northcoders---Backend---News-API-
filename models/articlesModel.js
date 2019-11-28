@@ -2,7 +2,7 @@ const connection = require('../db/connection');
 
 //----------------/articles----------------------------
 
-exports.fetchAllArticles = () => {
+exports.fetchAllArticles = ({ sort_by, order }) => {
   console.log('fetching all articles')
   return connection
     .select('articles.*')
@@ -10,6 +10,7 @@ exports.fetchAllArticles = () => {
     .from('articles')
     .leftJoin('comments', 'articles.article_id', 'comments.article_id')
     .groupBy('articles.article_id')
+    .orderBy(sort_by || "created_at")
 }
 
 //-----------------/articles/:article_id--------------------

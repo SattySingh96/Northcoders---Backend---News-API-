@@ -3,7 +3,7 @@ const { fetchAllArticles, fetchArticlesById, updateArticleVotesById, addCommentB
 //--------------------/articles-----------------------------
 exports.getAllArticles = (req, res, next) => {
   console.log('getting all articles')
-  fetchAllArticles()
+  fetchAllArticles(req.query)
     .then((articles) => {
       res.status(200).send({ articles: articles })
     })
