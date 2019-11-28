@@ -201,7 +201,7 @@ describe('app', () => {
           });
         });
         describe('GET', () => {
-          it('status 200 - return array of comment objects, each having 5 keys', () => {
+          it('Status 200 - return array of comment objects, each having 5 keys', () => {
             return request(app)
               .get('/api/articles/1/comments')
               .expect(200)
@@ -219,7 +219,20 @@ describe('app', () => {
               });
           });
           it('Status 200 - If given a sort_by query, sort comments by this criteria', () => {
-
+            return request(app)
+              .get('/api/articles/1/comments?sort_by=author')
+              .expect(200)
+              .then(({ body }) => {
+                expect(body).to.be.sortedBy('author')
+              });
+          });
+          it('Status 400 - If given an invalid sort_by column query', () => {
+            return request(app)
+              .get('/api/articles/1/comments?sort_by=title')
+              .expect(400)
+              .then(({ body: { msg } }) => {
+                expect(msg).to.equal('bad request')
+              });
           });
         });
       });
