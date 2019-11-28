@@ -118,13 +118,22 @@ describe('app', () => {
                 expect(patchedBody.votes).to.equal(101)
               });
           });
-          it('status 400: bad request', () => {
+          it('status 400: bad request - Incorrect data type in patch body', () => {
             return request(app)
               .patch('/api/articles/3')
-              .send({ 'inc-votes': '9;' })
+              .send({ 'inc-votes': '9' })
               .expect(400)
-              .then(({ body: { patchedBody } }) => {
-                console.log(patchedBody);
+              .then(() => {
+                console.log()
+              });
+          });
+          xit('status 400: bad request - invalid id passed', () => {
+            return request(app)
+              .patch('/api/articles/20')
+              .send({ 'inc-votes': 1 })
+              .expect(404)
+              .then(({ body: { msg } }) => {
+                expect(msg).to.equal('invalid path/url')
               });
           });
         });

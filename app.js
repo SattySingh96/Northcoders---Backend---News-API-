@@ -1,6 +1,6 @@
 const express = require('express');
 const apiRouter = require('./routers/apiRouter')
-const { handle404s, handle400s } = require('./errors/index')
+const { handle404s, handle400s, handle405s } = require('./errors/index')
 
 //---Set up app---
 const app = express();
@@ -11,7 +11,7 @@ app.use(express.json())
 app.use('/api', apiRouter)
 
 //---Error Handlers---
-app.use(handle404s, handle400s)
+app.use(handle404s, handle400s, handle405s)
 
 
 module.exports = app;

@@ -15,11 +15,6 @@ exports.patchArticleVoteById = (req, res, next) => {
     return Promise.reject({ status: 400, msg: 'Bad Request' })
       .catch(next)
   }
-  else if (typeof req.body['inc-votes'] === 'string') {
-    return Promise.reject({ status: 400, msg: 'Bad Request' })
-      .catch(next)
-  }
-
   else {
     console.log("patching votes")
     updateArticleVotesById(req.params.article_id, req.body['inc-votes'])
