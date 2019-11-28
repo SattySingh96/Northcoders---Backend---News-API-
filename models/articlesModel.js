@@ -13,7 +13,6 @@ exports.fetchArticlesById = (id) => {
 
 exports.updateArticleVotesById = (id, patchInfo) => {
   console.log('updating votes in db')
-
   return connection('articles')
     .where('article_id', id)
     .increment('votes', patchInfo)

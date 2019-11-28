@@ -118,6 +118,16 @@ describe('app', () => {
                 expect(patchedBody.votes).to.equal(101)
               });
           });
+          it('status 400: bad request', () => {
+            return request(app)
+              .patch('/api/articles/1')
+              .send({ 1: 'inc-votes' })
+              .expect(400)
+              .then(({ body: { patchedBody } }) => {
+
+
+              });
+          });
         });
       });
     });
