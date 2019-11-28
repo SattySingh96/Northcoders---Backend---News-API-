@@ -1,5 +1,9 @@
 const connection = require('../db/connection');
 
+
+//-----------------/articles/:article_id--------------------
+
+
 exports.fetchArticlesById = (id) => {
   console.log('fetching articles from db')
   return connection
@@ -20,6 +24,9 @@ exports.updateArticleVotesById = (id, patchBody) => {
 }
 
 
+//-----------------/articles/:article_id/comments---------------
+
+
 exports.addCommentById = (id, postInfo) => {
   const postBody = {
     author: postInfo.username,
@@ -31,3 +38,11 @@ exports.addCommentById = (id, postInfo) => {
     .insert(postBody)
     .returning('*')
 }
+
+exports.fetchCommentsById = (id) => {
+  console.log('fetching comments from db')
+  return connection
+    .select('comment_id', 'author', 'votes', 'created_at', 'body')
+    .from('comments')
+    .where('article_id', id)
+} 

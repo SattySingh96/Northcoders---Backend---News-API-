@@ -1,8 +1,9 @@
-const { fetchArticlesById, updateArticleVotesById, addCommentById } = require('../models/articlesModel')
+const { fetchArticlesById, updateArticleVotesById, addCommentById, fetchCommentsById } = require('../models/articlesModel')
 
+// -----------------/articles/:article_id--------------------
 
 exports.getArticlesById = (req, res, next) => {
-  console.log('sending articles')
+  console.log('getting articles')
   fetchArticlesById(req.params.article_id)
     .then((articles) => {
       res.status(200).send({ articles: articles[0] })
@@ -25,6 +26,8 @@ exports.patchArticleVoteById = (req, res, next) => {
   }
 }
 
+//-----------------/articles/:article_id/comments---------------
+
 exports.postCommentById = (req, res, next) => {
   console.log('posting comment')
   addCommentById(req.params.article_id, req.body)
@@ -32,4 +35,13 @@ exports.postCommentById = (req, res, next) => {
       res.status(201).send(postedBody[0])
     })
     .catch(next);
+}
+
+exports.getCommentsById = (req, res, next) => {
+  console.log('getting comments')
+  fetchCommentsById(req.params.article_id)
+    .then((comments) => {
+      res.status(200).send(comments)
+    })
+    .catch(next)
 }

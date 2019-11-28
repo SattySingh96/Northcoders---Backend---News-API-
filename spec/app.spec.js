@@ -197,6 +197,16 @@ describe('app', () => {
               });
           });
         });
+        describe('GET', () => {
+          it('status 200 - return array of comment objects, each having 5 keys', () => {
+            return request(app)
+              .get('/api/articles/1/comments')
+              .expect(200)
+              .then(({ body }) => {
+                expect(body[0]).keys('comment_id', 'author', 'votes', 'created_at', 'body')
+              });
+          });
+        });
       });
     });
   });
