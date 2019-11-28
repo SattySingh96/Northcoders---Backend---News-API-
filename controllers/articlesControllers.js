@@ -29,7 +29,7 @@ exports.postCommentById = (req, res, next) => {
   console.log('posting comment')
   addCommentById(req.params.article_id, req.body)
     .then((postedBody) => {
-      res.status(201).send({ postedBody })
+      res.status(201).send(postedBody[0])
     })
     .catch(next);
 }

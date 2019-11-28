@@ -137,14 +137,27 @@ describe('app', () => {
               });
           });
         });
+      });
+      describe('/:article_id/comments', () => {
+        it('status 405: methods not allowed, Delete, Put, Patch ', () => {
+          const methods = ['delete', 'put', 'patch'].map((method) => {
+            return request(app)
+            [method]('/api/articles/1/comments')
+              .expect(405)
+              .then(({ body: { msg } }) => {
+                expect(msg).to.equal('method not allowed on this path');
+              });
+          });
+          return Promise.all(methods);
+        });
         describe('POST', () => {
-          it('status 201 - returns posted comment body', () => {
+          it('status 201 - returns posted comment object, with 6 keys', () => {
             return request(app)
               .post('/api/articles/1/comments')
               .send({ username: 'butter_bridge', body: 'Test comment' })
               .expect(201)
-              .then(({ body: { commentBody } }) => {
-                console.log(commentBody)
+              .then(({ body }) => {
+                expect(body).keys('comment_id', 'author', 'article_id', 'votes', 'created_at', 'body')
               });
           });
         });
