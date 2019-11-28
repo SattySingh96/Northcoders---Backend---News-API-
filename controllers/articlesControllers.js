@@ -39,7 +39,7 @@ exports.postCommentById = (req, res, next) => {
 
 exports.getCommentsById = (req, res, next) => {
   console.log('getting comments')
-  fetchCommentsById(req.params.article_id)
+  fetchCommentsById(req.params.article_id, req.query)
     .then((comments) => {
       res.status(200).send(comments)
     })

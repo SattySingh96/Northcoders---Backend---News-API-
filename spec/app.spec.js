@@ -3,6 +3,9 @@ const { expect } = require('chai');
 const app = require("../app");
 const request = require("supertest");
 const connection = require('../db/connection');
+const chai = require("chai");
+const chaiSorted = require("chai-sorted");
+chai.use(chaiSorted);
 
 after(() => {
   connection.destroy();
@@ -204,7 +207,19 @@ describe('app', () => {
               .expect(200)
               .then(({ body }) => {
                 expect(body[0]).keys('comment_id', 'author', 'votes', 'created_at', 'body')
+                expect(body.length).to.equal(13)
               });
+          });
+          it('Status 200 - Sorts_by created_at by default, if no sort_by query is given', () => {
+            return request(app)
+              .get('/api/articles/1/comments')
+              .expect(200)
+              .then(({ body }) => {
+                expect(body).to.be.sortedBy('created_at')
+              });
+          });
+          it('Status 200 - If given a sort_by query, sort comments by this criteria', () => {
+
           });
         });
       });

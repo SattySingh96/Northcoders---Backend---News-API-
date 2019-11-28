@@ -39,10 +39,11 @@ exports.addCommentById = (id, postInfo) => {
     .returning('*')
 }
 
-exports.fetchCommentsById = (id) => {
+exports.fetchCommentsById = (id, { sort_by }) => {
   console.log('fetching comments from db')
   return connection
     .select('comment_id', 'author', 'votes', 'created_at', 'body')
     .from('comments')
     .where('article_id', id)
+    .orderBy(sort_by || "created_at")
 } 
