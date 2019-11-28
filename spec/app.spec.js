@@ -282,47 +282,51 @@ describe('app', () => {
                 expect(articles[0].comment_count).equals('13')
               });
           });
-          it('Status 200 - If no sort_by query is given, sort descendingly by "created_at" by default', () => {
-            return request(app)
-              .get('/api/articles')
-              .expect(200)
-              .then(({ body: { articles } }) => {
-                expect(articles).to.be.sortedBy('created_at', { descending: true });
-              });
-          });
-          it('Status 200 - If given a sort_by query, sort comments by this criteria', () => {
-            return request(app)
-              .get('/api/articles?sort_by=author')
-              .expect(200)
-              .then(({ body: { articles } }) => {
-                expect(articles).to.be.sortedBy('author', {
-                  descending: true
+          describe('/articles?sort_by=', () => {
+            it('Status 200 - If no sort_by query is given, sort descendingly by "created_at" by default', () => {
+              return request(app)
+                .get('/api/articles')
+                .expect(200)
+                .then(({ body: { articles } }) => {
+                  expect(articles).to.be.sortedBy('created_at', { descending: true });
                 });
-              });
+            });
+            it('Status 200 - If given a sort_by query, sort comments by this criteria', () => {
+              return request(app)
+                .get('/api/articles?sort_by=author')
+                .expect(200)
+                .then(({ body: { articles } }) => {
+                  expect(articles).to.be.sortedBy('author', {
+                    descending: true
+                  });
+                });
+            });
+            it('Status 400 - If given an invalid sort_by column query', () => {
+              return request(app)
+                .get('/api/articles?sort_by=colour')
+                .expect(400)
+                .then(({ body: { msg } }) => {
+                  expect(msg).to.equal('bad request')
+                });
+            });
           });
-          it('Status 400 - If given an invalid sort_by column query', () => {
-            return request(app)
-              .get('/api/articles?sort_by=colour')
-              .expect(400)
-              .then(({ body: { msg } }) => {
-                expect(msg).to.equal('bad request')
-              });
-          });
-          it('Status 200 - If given an order query, order by desc by default', () => {
-            return request(app)
-              .get('/api/articles/1/comments?order=desc')
-              .expect(200)
-              .then(({ body: { comments } }) => {
-                expect(comments).to.be.descendingBy('created_at')
-              });
-          });
-          it('Status 200 - If given an order query of asc/desc, order by asc/desc', () => {
-            return request(app)
-              .get('/api/articles?order=asc')
-              .expect(200)
-              .then(({ body: { articles } }) => {
-                expect(articles).to.be.ascendingBy('created_at')
-              });
+          describe('/articles?order=', () => {
+            it('Status 200 - If given an order query, order by desc by default', () => {
+              return request(app)
+                .get('/api/articles/1/comments?order=desc')
+                .expect(200)
+                .then(({ body: { comments } }) => {
+                  expect(comments).to.be.descendingBy('created_at')
+                });
+            });
+            it('Status 200 - If given an order query of asc/desc, order by asc/desc', () => {
+              return request(app)
+                .get('/api/articles?order=asc')
+                .expect(200)
+                .then(({ body: { articles } }) => {
+                  expect(articles).to.be.ascendingBy('created_at')
+                });
+            });
           });
         });
       });
