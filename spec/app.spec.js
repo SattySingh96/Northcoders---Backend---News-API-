@@ -43,7 +43,6 @@ describe('app', () => {
             .get('/api/topics')
             .expect(200)
             .then(({ body: { topics } }) => {
-              //console.log(topics);
               expect(topics).to.be.an('array');
               expect(topics.length).to.equal(3);
               expect(topics[0]).keys("slug", "description");
@@ -96,7 +95,6 @@ describe('app', () => {
               .get('/api/articles/1')
               .expect(200)
               .then(({ body: { articles } }) => {
-                console.log(articles)
                 expect(articles).keys('article_id', 'votes', 'body', 'author', 'created_at', 'topic', 'title', 'comment_count');
                 expect
               });
@@ -126,11 +124,11 @@ describe('app', () => {
               .patch('/api/articles/3')
               .send({ 'inc-votes': '9' })
               .expect(400)
-              .then(() => {
-                console.log()
+              .then(({ body: { msg } }) => {
+                expect(msg).to.equal('Bad Request')
               });
           });
-          xit('status 400: bad request - invalid id passed', () => {
+          xit('status 404: bad request - invalid id passed', () => {
             return request(app)
               .patch('/api/articles/20')
               .send({ 'inc-votes': 1 })
@@ -215,7 +213,6 @@ describe('app', () => {
               .get('/api/articles/1/comments')
               .expect(200)
               .then(({ body: { comments } }) => {
-                console.log(comments)
                 expect(comments).to.be.sortedBy('created_at', { descending: true });
               });
           });
@@ -325,6 +322,17 @@ describe('app', () => {
                 .expect(200)
                 .then(({ body: { articles } }) => {
                   expect(articles).to.be.ascendingBy('created_at')
+                });
+            });
+          });
+          describe('/articles?author=', () => {
+            it('Status 200 - If given an author query, return articles by that author', () => {
+              return request(app)
+                .get('/api/articles?author=butter_bridge')
+                .expect(200)
+                .then(({ body: { articles } }) => {
+                  console.log(articles)
+                  expect(articles).to.be.descendingBy('created_at')
                 });
             });
           });

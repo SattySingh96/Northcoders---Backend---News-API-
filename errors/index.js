@@ -21,6 +21,11 @@ exports.handle422s = (err, req, res, next) => {
   else next(err);
 }
 
+exports.handle500s = (err, req, res, next) => {
+  if (err) console.log(err)
+  res.status(500).send({ msg: 'server error' })
+}
+
 
 
 
