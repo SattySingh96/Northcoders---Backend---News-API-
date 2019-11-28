@@ -306,13 +306,12 @@ describe('app', () => {
           });
           it('Status 400 - If given an invalid sort_by column query', () => {
             return request(app)
-              .get('/api/articles/1/comments?sort_by=title')
+              .get('/api/articles?sort_by=colour')
               .expect(400)
               .then(({ body: { msg } }) => {
                 expect(msg).to.equal('bad request')
               });
           });
-
         });
       });
     });

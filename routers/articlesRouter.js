@@ -6,6 +6,7 @@ const { handle405s, handle400s, handle404s, handle422s } = require('../errors/in
 articlesRouter.route('/')
   .get(getAllArticles)
   .all(handle405s)
+  .all(handle400s)
 
 articlesRouter.route('/:article_id')
   .get(getArticlesById)
