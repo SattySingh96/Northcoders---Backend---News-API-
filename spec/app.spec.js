@@ -160,6 +160,15 @@ describe('app', () => {
                 expect(body).keys('comment_id', 'author', 'article_id', 'votes', 'created_at', 'body')
               });
           });
+          it('status 400 - Number of columns in post body is less than the number of columns in the recipient table', () => {
+            return request(app)
+              .post('/api/articles/1/comments')
+              .send({ username: 'butter_bridge' })
+              .expect(400)
+              .then(({ body: { msg } }) => {
+                expect(msg).to.equal('bad request');
+              });
+          });
         });
       });
     });
