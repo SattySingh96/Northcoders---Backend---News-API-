@@ -201,29 +201,33 @@ describe('app', () => {
           });
         });
         describe('GET', () => {
-          it('Status 200 - return array of comment objects, each having 5 keys', () => {
+          it('Status 200 - Return array of comment objects, each having 5 keys', () => {
             return request(app)
               .get('/api/articles/1/comments')
               .expect(200)
-              .then(({ body }) => {
-                expect(body[0]).keys('comment_id', 'author', 'votes', 'created_at', 'body')
-                expect(body.length).to.equal(13)
+              .then(({ body: { comments } }) => {
+                expect(comments[0]).keys('comment_id', 'author', 'votes', 'created_at', 'body')
+                expect(comments.length).to.equal(13)
               });
           });
-          it('Status 200 - Sorts_by created_at by default, if no sort_by query is given', () => {
+          it('Status 200 - If no sort_by query is given, sort descendingly by "created_at" by default', () => {
             return request(app)
               .get('/api/articles/1/comments')
               .expect(200)
-              .then(({ body }) => {
-                expect(body).to.be.sortedBy('created_at')
+              .then(({ body: { comments } }) => {
+                expect(comments).to.be.sortedBy('created_at', {
+                  descending: true
+                });
               });
           });
           it('Status 200 - If given a sort_by query, sort comments by this criteria', () => {
             return request(app)
               .get('/api/articles/1/comments?sort_by=author')
               .expect(200)
-              .then(({ body }) => {
-                expect(body).to.be.sortedBy('author')
+              .then(({ body: { comments } }) => {
+                expect(comments).to.be.sortedBy('author', {
+                  descending: true
+                });
               });
           });
           it('Status 400 - If given an invalid sort_by column query', () => {
@@ -232,6 +236,42 @@ describe('app', () => {
               .expect(400)
               .then(({ body: { msg } }) => {
                 expect(msg).to.equal('bad request')
+              });
+          });
+          it('Status 200 - If given an order query, order by desc by default', () => {
+            return request(app)
+              .get('/api/articles/1/comments?order=desc')
+              .expect(200)
+              .then(({ body: { comments } }) => {
+                expect(comments).to.be.descendingBy('created_at')
+              });
+          });
+          it('Status 200 - If given an order query of asc/desc, order by asc/desc', () => {
+            return request(app)
+              .get('/api/articles/1/comments?order=asc')
+              .expect(200)
+              .then(({ body: { comments } }) => {
+                expect(comments).to.be.ascendingBy('created_at')
+              });
+          });
+        });
+      });
+      describe('/articles', () => {
+        describe('GET', () => {
+          it('Status 200: return an array of articles objects, with 8 keys', () => {
+            return request(app)
+              .get('/api/articles')
+              .expect(200)
+              .then(({ body: { articles } }) => {
+                expect(articles[0]).keys('article_id', 'title', 'body', 'votes', 'topic', 'author', 'created_at', 'comment_count')
+              });
+          });
+          it('Status 200: comment_count key should have a value of ', () => {
+            return request(app)
+              .get('/api/articles')
+              .expect(200)
+              .then(({ body: { articles } }) => {
+                expect(articles[3].comment_count).equals('2')
               });
           });
         });

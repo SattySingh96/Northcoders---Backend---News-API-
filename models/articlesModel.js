@@ -1,5 +1,16 @@
 const connection = require('../db/connection');
 
+//----------------/articles----------------------------
+
+exports.fetchAllArticles = () => {
+  console.log('fetching all articles')
+  return connection
+    .select('articles.*')
+    .count('comment_id as comment_count')
+    .from('articles')
+    .leftJoin('comments', 'articles.article_id', 'comments.article_id')
+    .groupBy('articles.article_id')
+}
 
 //-----------------/articles/:article_id--------------------
 
@@ -39,11 +50,11 @@ exports.addCommentById = (id, postInfo) => {
     .returning('*')
 }
 
-exports.fetchCommentsById = (id, { sort_by }) => {
+exports.fetchCommentsById = (id, { sort_by, order }) => {
   console.log('fetching comments from db')
   return connection
     .select('comment_id', 'author', 'votes', 'created_at', 'body')
     .from('comments')
     .where('article_id', id)
-    .orderBy(sort_by || "created_at")
+    .orderBy(sort_by || "created_at", order || 'desc')
 } 
