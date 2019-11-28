@@ -13,13 +13,13 @@ exports.handle400s = (err, req, res, next) => {
   else next(err)
 }
 
-
-
-
-
-
-
-
+exports.handle422s = (err, req, res, next) => {
+  const errorCodes = ['23503'];
+  if (errorCodes.includes(err.code)) {
+    res.status(422).send({ msg: 'unprocessable entity' });
+  }
+  else next(err);
+}
 
 
 
@@ -32,5 +32,7 @@ exports.handle405s = (req, res, next) => {
 exports.handle404s = (req, res, next) => {
   res.status(404).send({ msg: 'Invalid path/url' });
 }
+
+
 
 

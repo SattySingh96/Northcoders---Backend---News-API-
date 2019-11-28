@@ -178,6 +178,15 @@ describe('app', () => {
                 expect(msg).to.equal('bad request');
               });
           });
+          it('status 422 - article_id given is non-existant', () => {
+            return request(app)
+              .post('/api/articles/9999/comments')
+              .send({ username: 'butter_bridge', body: 'test-comment' })
+              .expect(422)
+              .then(({ body: { msg } }) => {
+                expect(msg).to.equal('unprocessable entity')
+              });
+          });
         });
       });
     });

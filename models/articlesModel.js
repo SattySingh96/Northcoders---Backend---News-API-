@@ -18,14 +18,14 @@ exports.updateArticleVotesById = (id, patchBody) => {
     .increment('votes', patchBody)
     .returning('*');
 }
-exports.addCommentById = (id, postInfo) => {
 
+
+exports.addCommentById = (id, postInfo) => {
   const postBody = {
     author: postInfo.username,
     article_id: id,
     body: postInfo.body
   }
-  console.log(postBody)
   console.log('adding comment to db')
   return connection('comments')
     .insert(postBody)
