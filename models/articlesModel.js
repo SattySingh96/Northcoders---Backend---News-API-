@@ -10,7 +10,7 @@ exports.fetchAllArticles = ({ sort_by, order }) => {
     .from('articles')
     .leftJoin('comments', 'articles.article_id', 'comments.article_id')
     .groupBy('articles.article_id')
-    .orderBy(sort_by || "created_at")
+    .orderBy(sort_by || "created_at", order || 'desc')
 }
 
 //-----------------/articles/:article_id--------------------

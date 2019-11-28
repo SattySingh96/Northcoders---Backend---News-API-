@@ -215,9 +215,8 @@ describe('app', () => {
               .get('/api/articles/1/comments')
               .expect(200)
               .then(({ body: { comments } }) => {
-                expect(comments).to.be.sortedBy('created_at', {
-                  descending: true
-                });
+                console.log(comments)
+                expect(comments).to.be.sortedBy('created_at', { descending: true });
               });
           });
           it('Status 200 - If given a sort_by query, sort comments by this criteria', () => {
@@ -225,9 +224,7 @@ describe('app', () => {
               .get('/api/articles/1/comments?sort_by=author')
               .expect(200)
               .then(({ body: { comments } }) => {
-                expect(comments).to.be.sortedBy('author', {
-                  descending: true
-                });
+                expect(comments).to.be.sortedBy('author', { descending: true });
               });
           });
           it('Status 400 - If given an invalid sort_by column query', () => {
@@ -282,7 +279,7 @@ describe('app', () => {
               .get('/api/articles')
               .expect(200)
               .then(({ body: { articles } }) => {
-                expect(articles[3].comment_count).equals('2')
+                expect(articles[0].comment_count).equals('13')
               });
           });
           it('Status 200 - If no sort_by query is given, sort descendingly by "created_at" by default', () => {
@@ -290,7 +287,7 @@ describe('app', () => {
               .get('/api/articles')
               .expect(200)
               .then(({ body: { articles } }) => {
-                expect(articles).to.be.sortedBy('created_at');
+                expect(articles).to.be.sortedBy('created_at', { descending: true });
               });
           });
           it('Status 200 - If given a sort_by query, sort comments by this criteria', () => {
@@ -298,9 +295,8 @@ describe('app', () => {
               .get('/api/articles?sort_by=author')
               .expect(200)
               .then(({ body: { articles } }) => {
-                console.log(articles)
                 expect(articles).to.be.sortedBy('author', {
-                  descending: false
+                  descending: true
                 });
               });
           });
@@ -310,6 +306,14 @@ describe('app', () => {
               .expect(400)
               .then(({ body: { msg } }) => {
                 expect(msg).to.equal('bad request')
+              });
+          });
+          it('Status 200 - If given an order query, order by desc by default', () => {
+            return request(app)
+              .get('/api/articles/1/comments?order=desc')
+              .expect(200)
+              .then(({ body: { comments } }) => {
+                expect(comments).to.be.descendingBy('created_at')
               });
           });
         });
