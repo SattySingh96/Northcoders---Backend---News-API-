@@ -137,6 +137,17 @@ describe('app', () => {
               });
           });
         });
+        describe('POST', () => {
+          it('status 201 - returns posted comment body', () => {
+            return request(app)
+              .post('/api/articles/1/comments')
+              .send({ username: 'butter_bridge', body: 'Test comment' })
+              .expect(201)
+              .then(({ body: { commentBody } }) => {
+                console.log(commentBody)
+              });
+          });
+        });
       });
     });
   });

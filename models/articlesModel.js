@@ -11,10 +11,21 @@ exports.fetchArticlesById = (id) => {
     .groupBy('articles.article_id')
 };
 
-exports.updateArticleVotesById = (id, patchInfo) => {
+exports.updateArticleVotesById = (id, patchBody) => {
   console.log('updating votes in db')
   return connection('articles')
     .where('article_id', id)
-    .increment('votes', patchInfo)
+    .increment('votes', patchBody)
     .returning('*');
-};
+}
+exports.addCommentById = (id, postInfo) => {
+  const postBody = {
+    author: postInfo.username,
+    article_id: id,
+    body: postInfo.body
+  }
+  console.log('adding comment to db')
+  return connection('comments')
+    .insert(postBody)
+    .returning('*')
+}
