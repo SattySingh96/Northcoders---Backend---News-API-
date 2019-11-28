@@ -120,12 +120,11 @@ describe('app', () => {
           });
           it('status 400: bad request', () => {
             return request(app)
-              .patch('/api/articles/1')
-              .send({ 1: 'inc-votes' })
+              .patch('/api/articles/3')
+              .send({ 'inc-votes': '9;' })
               .expect(400)
               .then(({ body: { patchedBody } }) => {
-
-
+                console.log(patchedBody);
               });
           });
         });
