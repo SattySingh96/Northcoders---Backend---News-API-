@@ -382,7 +382,17 @@ describe('app', () => {
                 expect(patchedBody.votes).to.equal(17)
               });
           });
+          it('status 400: bad request - Incorrect data type in patch body', () => {
+            return request(app)
+              .patch('/api/articles/3')
+              .send({ 'inc_votes': '9' })
+              .expect(400)
+              .then(({ body: { msg } }) => {
+                expect(msg).to.equal('Bad Request')
+              });
+          });
         });
       });
     });
   });
+});
