@@ -10,3 +10,10 @@ exports.updateCommentVotesById = (id, patchBody) => {
     .increment('votes', patchBody)
     .returning('*')
 }
+
+exports.removeCommentById = (id) => {
+  console.log('removing comments')
+  return connection('comments')
+    .where('comment_id', id)
+    .del('*')
+}

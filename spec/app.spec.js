@@ -412,8 +412,18 @@ describe('app', () => {
               });
           });
         });
-        describe('DELETE', () => {
+        describe.only('DELETE', () => {
+          it('Status 204 ', () => {
+            return request(app)
+              .delete('/api/comments/1')
+              .expect(204)
+          });
+          it('Status 204 - Ensure comment object has been deleted', () => {
 
+
+
+
+          }
         });
       });
     });

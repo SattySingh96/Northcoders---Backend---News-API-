@@ -1,4 +1,4 @@
-const { updateCommentVotesById } = require('../models/commentsModel')
+const { updateCommentVotesById, removeCommentById } = require('../models/commentsModel')
 
 
 
@@ -18,3 +18,10 @@ exports.patchCommentVoteById = (req, res, next) => {
       .catch(next)
   }
 }
+
+exports.deleteCommentbyId = (req, res, next) => {
+  console.log('sending delete')
+  removeCommentById(req.params.comment_id).then(() => {
+    res.status(204).send()
+  });
+};
