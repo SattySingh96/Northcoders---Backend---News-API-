@@ -4,13 +4,14 @@ const { handle404s, handle400s, handle405s, handle422s, handle500s, customHandle
 
 //---Set up app---
 const app = express();
-
 app.use(express.json())
 
 //---Set up apiRouter---
 app.use('/api', apiRouter)
 
+//---Error Handler(404)---
 app.all('/*', handle404s)
+
 
 //---Error Handlers---
 app.use(customHandlers)

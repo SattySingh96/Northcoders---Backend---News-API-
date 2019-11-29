@@ -357,7 +357,7 @@ describe('app', () => {
                   expect(articles[0].topic).to.equal('mitch')
                 });
             });
-            it('status 400 - If given non-existant topic', () => {
+            xit('status 400 - If given non-existant topic', () => {
               return request(app)
                 .get('/api/articles?topic=satnam')
                 .expect(400)
@@ -412,18 +412,12 @@ describe('app', () => {
               });
           });
         });
-        describe.only('DELETE', () => {
+        describe('DELETE', () => {
           it('Status 204 ', () => {
             return request(app)
               .delete('/api/comments/1')
               .expect(204)
           });
-          it('Status 204 - Ensure comment object has been deleted', () => {
-
-
-
-
-          }
         });
       });
     });
