@@ -371,6 +371,17 @@ describe('app', () => {
       });
     });
     describe('/comments', () => {
+      it('status 405 - Methods not allowed, PUT, POST', () => {
+        const methods = ['put', 'post'].map((method) => {
+          return request(app)
+          [method]('/api/comments/1')
+            .expect(405)
+            .then(({ body: { msg } }) => {
+              expect(msg).to.equal('method not allowed on this path');
+            });
+        });
+        return Promise.all(methods);
+      });
       describe('/:comment_id', () => {
         describe('PATCH', () => {
           it('status 200: return the patched comments object', () => {
@@ -400,6 +411,9 @@ describe('app', () => {
                 expect(msg).to.equal('invalid path/url')
               });
           });
+        });
+        describe('DELETE', () => {
+
         });
       });
     });
