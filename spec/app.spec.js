@@ -333,6 +333,37 @@ describe('app', () => {
                 .then(({ body: { articles } }) => {
                   console.log(articles)
                   expect(articles).to.be.descendingBy('created_at')
+                  expect(articles[0].author).to.equal('butter_bridge')
+                });
+            });
+            xit('status 400 - If given a non-existant author', () => {
+              return request(app)
+                .get('/api/articles?author=satnam_singh')
+                .expect(400)
+                .then(({ body: { msg } }) => {
+                  console.log(msg)
+                  expect(msg).to.equal('Bad Request')
+                });
+            });
+          });
+          describe('/articles?topic=', () => {
+            it('Status 200 - If given an topic query, return articles in that topic area', () => {
+              return request(app)
+                .get('/api/articles?topic=mitch')
+                .expect(200)
+                .then(({ body: { articles } }) => {
+                  console.log(articles)
+                  expect(articles).to.be.descendingBy('created_at')
+                  expect(articles[0].topic).to.equal('mitch')
+                });
+            });
+            it('status 400 - If given non-existant topic', () => {
+              return request(app)
+                .get('/api/articles?topic=satnam')
+                .expect(400)
+                .then(({ body: { msg } }) => {
+                  console.log(msg)
+                  expect(msg).to.equal('Bad Request')
                 });
             });
           });
