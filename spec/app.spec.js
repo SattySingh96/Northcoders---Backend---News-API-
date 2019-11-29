@@ -113,7 +113,7 @@ describe('app', () => {
           it('status 200: return the patched article object', () => {
             return request(app)
               .patch('/api/articles/1')
-              .send({ 'inc-votes': 1 })
+              .send({ 'inc_votes': 1 })
               .expect(200)
               .then(({ body: { patchedBody } }) => {
                 expect(patchedBody.votes).to.equal(101)
@@ -122,7 +122,7 @@ describe('app', () => {
           it('status 400: bad request - Incorrect data type in patch body', () => {
             return request(app)
               .patch('/api/articles/3')
-              .send({ 'inc-votes': '9' })
+              .send({ 'inc_votes': '9' })
               .expect(400)
               .then(({ body: { msg } }) => {
                 expect(msg).to.equal('Bad Request')
@@ -131,7 +131,7 @@ describe('app', () => {
           xit('status 404: bad request - invalid id passed', () => {
             return request(app)
               .patch('/api/articles/20')
-              .send({ 'inc-votes': 1 })
+              .send({ 'inc_votes': 1 })
               .expect(404)
               .then(({ body: { msg } }) => {
                 expect(msg).to.equal('invalid path/url')
@@ -370,5 +370,19 @@ describe('app', () => {
         });
       });
     });
+    describe('/comments', () => {
+      describe('/:comment_id', () => {
+        describe('PATCH', () => {
+          it('status 200: return the patched comments object', () => {
+            return request(app)
+              .patch('/api/comments/1')
+              .send({ 'inc_votes': 1 })
+              .expect(200)
+              .then(({ body: { patchedBody } }) => {
+                expect(patchedBody.votes).to.equal(17)
+              });
+          });
+        });
+      });
+    });
   });
-});

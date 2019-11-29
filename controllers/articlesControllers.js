@@ -22,13 +22,13 @@ exports.getArticlesById = (req, res, next) => {
 }
 
 exports.patchArticleVoteById = (req, res, next) => {
-  if (typeof req.body['inc-votes'] === 'string') {
+  if (typeof req.body['inc_votes'] === 'string') {
     return Promise.reject({ status: 400, msg: 'Bad Request' })
       .catch(next)
   }
   else {
     console.log("patching votes")
-    updateArticleVotesById(req.params.article_id, req.body['inc-votes'])
+    updateArticleVotesById(req.params.article_id, req.body['inc_votes'])
       .then((patchedBody) => {
         res.status(200).send({ patchedBody: patchedBody[0] })
       })
