@@ -33,11 +33,20 @@ exports.fetchArticlesById = (id) => {
 };
 
 exports.updateArticleVotesById = (id, patchBody) => {
+  if (typeof patchBody === 'string') {
+    return Promise.reject({ status: 400, msg: 'Bad Request' })
+  }
   console.log('updating votes in db')
   return connection('articles')
     .where('article_id', id)
     .increment('votes', patchBody)
-    .returning('*');
+    .returning('*')
+    .then((articleArray) => {
+      if (articleArray.length === 0) {
+        return Promise.reject({ status: 404, msg: 'article not found' })
+      }
+      return articleArray;
+    })
 }
 
 

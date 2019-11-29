@@ -128,13 +128,13 @@ describe('app', () => {
                 expect(msg).to.equal('Bad Request')
               });
           });
-          xit('status 404: bad request - invalid id passed', () => {
+          it('status 404: Valid but non-existant article_id', () => {
             return request(app)
               .patch('/api/articles/20')
               .send({ 'inc_votes': 1 })
               .expect(404)
               .then(({ body: { msg } }) => {
-                expect(msg).to.equal('invalid path/url')
+                expect(msg).to.equal('article not found')
               });
           });
         });
@@ -336,13 +336,13 @@ describe('app', () => {
                   expect(articles[0].author).to.equal('butter_bridge')
                 });
             });
-            xit('status 400 - If given a non-existant author', () => {
+            it('status 404 - where author is valid but non-existant at this time', () => {
               return request(app)
                 .get('/api/articles?author=satnam_singh')
-                .expect(400)
+                .expect(404)
                 .then(({ body: { msg } }) => {
-                  console.log(msg)
-                  expect(msg).to.equal('Bad Request')
+                  //console.log(msg)
+                  expect(msg).to.equal('No articles found')
                 });
             });
           });
@@ -357,13 +357,12 @@ describe('app', () => {
                   expect(articles[0].topic).to.equal('mitch')
                 });
             });
-            xit('status 400 - If given non-existant topic', () => {
+            it('status 404 - where topic is valid but non-existant at this time', () => {
               return request(app)
                 .get('/api/articles?topic=satnam')
-                .expect(400)
+                .expect(404)
                 .then(({ body: { msg } }) => {
-                  console.log(msg)
-                  expect(msg).to.equal('Bad Request')
+                  expect(msg).to.equal('No articles found')
                 });
             });
           });
@@ -402,13 +401,13 @@ describe('app', () => {
                 expect(msg).to.equal('Bad Request')
               });
           });
-          xit('status 404: bad request - invalid id passed', () => {
+          it('status 404:valid but non-existant id passed', () => {
             return request(app)
               .patch('/api/comments/20')
               .send({ 'inc-votes': 1 })
               .expect(404)
               .then(({ body: { msg } }) => {
-                expect(msg).to.equal('invalid path/url')
+                expect(msg).to.equal('Comment not found')
               });
           });
         });
