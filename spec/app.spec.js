@@ -103,7 +103,14 @@ describe('app', () => {
                             .then(({ body: { article } }) => {
                                 expect(article.comment_count).is.equal('13')
                             });
-
+                    });
+                    it.only('status 404: Valid but non-existant article_id', () => {
+                        return request(app)
+                            .get('/api/articles/999')                            
+                            .expect(404)
+                            .then(({ body: { msg } }) => {
+                                expect(msg).to.equal('article not found')
+                            });
                     });
                 });
                 describe('PATCH', () => {
@@ -265,7 +272,7 @@ describe('app', () => {
                     });
                     return Promise.all(methods);
                 });
-                describe.only('GET', () => {
+                describe('GET', () => {
                     it('Status 200: Return an array of articles objects, each having 8 keys', () => {
                         return request(app)
                             .get('/api/articles')

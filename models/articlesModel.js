@@ -44,6 +44,12 @@ exports.fetchArticleByArticleId = (id) => {
         .where('articles.article_id', id)
         .leftJoin('comments', 'articles.article_id', 'comments.article_id')
         .groupBy('articles.article_id')
+        .then((articles) => {
+            if (articles.length === 0) {
+                return Promise.reject({ status: 404, msg: 'article not found' })
+            }
+            return articles;
+        })        
 };
 
 exports.updateArticleVotesByArticleId = (id, vote_inc) => {
