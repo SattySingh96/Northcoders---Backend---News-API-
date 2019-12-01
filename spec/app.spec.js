@@ -17,7 +17,7 @@ beforeEach(() => {
 
 describe('app', () => {
     describe('/api', () => {
-        it.only('status 405: methods not allowed, Delete', () => {
+        it('status 405: methods not allowed, Delete', () => {
             const methods = ['delete', 'post', 'patch', 'put'].map((method) => {
                 return request(app)[method]('/api')
                     .expect(405)
@@ -464,10 +464,18 @@ describe('app', () => {
                     });
                     it('Status 400: Invalid, non-existant comment_id', () => {
                         return request(app)
-                            .delete('/api/comments/"text')                          
+                            .delete('/api/comments/text')                          
                             .expect(400)
                             .then(({ body: { msg } }) => {
                                 expect(msg).to.equal('Bad Request')
+                            });
+                    });
+                    it.only('Status 404: Valid, non-existant comment_id', () => {
+                        return request(app)
+                            .delete('/api/comments/1000')                          
+                            .expect(404)
+                            .then(({ body: { msg } }) => {
+                                expect(msg).to.equal('Comment not found')
                             });
                     });
                 });
