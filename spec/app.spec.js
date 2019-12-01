@@ -17,9 +17,19 @@ beforeEach(() => {
 
 describe('app', () => {
     describe('/api', () => {
+        it.only('status 405: methods not allowed, Delete', () => {
+            const methods = ['delete', 'post', 'patch', 'put'].map((method) => {
+                return request(app)[method]('/api')
+                    .expect(405)
+                    .then(({ body: { msg } }) => {
+                        expect(msg).to.equal('method not allowed on this path');
+                    });
+            });
+            return Promise.all(methods);
+        });
         it('status 404: Invalid path/url', () => {
             return request(app)
-                .get('/not-a-real-path')
+                .get('/api/not-a-real-path')
                 .expect(404)
                 .then(({ body: { msg } }) => {
                     expect(msg).to.equal('Invalid path/url')
@@ -83,7 +93,7 @@ describe('app', () => {
                 });
             });
         });
-        describe.only('/articles', () => {
+        describe('/articles', () => {
             describe('/:article_id', () => {
                 it('status 405: methods not allowed, Delete, Put, Post', () => {
                     const methods = ['delete', 'put', 'post'].map((method) => {
@@ -451,6 +461,14 @@ describe('app', () => {
                         return request(app)
                             .delete('/api/comments/1')
                             .expect(204)
+                    });
+                    it('Status 400: Invalid, non-existant comment_id', () => {
+                        return request(app)
+                            .delete('/api/comments/"text')                          
+                            .expect(400)
+                            .then(({ body: { msg } }) => {
+                                expect(msg).to.equal('Bad Request')
+                            });
                     });
                 });
             });

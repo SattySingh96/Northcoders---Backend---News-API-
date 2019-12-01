@@ -6,6 +6,5 @@ commentsRouter.route('/:comment_id')
     .patch(patchCommentVoteByArticleId)
     .delete(deleteCommentbyArticleId)
     .all(handle405s)
-    .all(handle404s)
 
 module.exports = commentsRouter
