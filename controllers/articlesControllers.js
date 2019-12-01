@@ -1,14 +1,50 @@
 const { fetchAllArticles, fetchArticleByArticleId, updateArticleVotesByArticleId, addCommentByArticleId, fetchCommentsByArticleId, checkArticleExists, checkAuthorExists, checkTopicExists } = require('../models/articlesModel')
 
 //--------------------/articles-----------------------------
+
 exports.getAllArticles = (req, res, next) => {
-   fetchAllArticles(req.query)
+    if (!req.query.hasOwnProperty('author') && !req.query.hasOwnProperty('topic')) {
+        fetchAllArticles(req.query)
+        .then((articles)=>{
+            res.status(200).send(articles);
+       })
+       .catch(next)
+   }
+    else if (req.query.hasOwnProperty('author') && !req.query.hasOwnProperty('topic')) {
+        Promise.all([fetchAllArticles(req.query), checkAuthorExists(req.query)])
+    .then((articles) => {        
+           res.status(200).send(articles[0]);
+       })
+       .catch(next);
+    }
+    else if (req.query.hasOwnProperty('topic') && !req.query.hasOwnProperty('author')) {
+       
+        Promise.all([fetchAllArticles(req.query), checkTopicExists(req.query)])
+    .then((articles) => {        
+           res.status(200).send(articles[0]);
+       })
+       .catch(next);
+    }
+    else if (req.query.hasOwnProperty('author') && req.query.hasOwnProperty('topic')) {
+        
+        Promise.all([fetchAllArticles(req.query), checkAuthorExists(req.query), checkTopicExists(req.query)])
     .then((articles) => {        
            res.status(200).send(articles);
        })
        .catch(next);
+    }   
+    
 }
-  
+
+
+exports.getCommentsByArticleId = (req, res, next) => {
+    const id = req.params.article_id;
+    Promise.all([fetchCommentsByArticleId(id, req.query), checkArticleExists(id)])
+        .then(([comments]) => {
+            res.status(200).send({ comments })
+        })
+        .catch(next);
+}
 
 
 // -----------------/articles/:article_id--------------------

@@ -126,19 +126,19 @@ describe('app', () => {
                     it('status 400: bad request - Incorrect data type in patch body', () => {
                         return request(app)
                             .patch('/api/articles/3')
-                            .send({ 'inc_votes': '9' })
+                            .send({ 'inc_votes': 'nine' })
                             .expect(400)
                             .then(({ body: { msg } }) => {
                                 expect(msg).to.equal('Bad Request')
                             });
                     });
-                    it('status 400: bad request - Empty patch request, returns unchanged article object', () => {
+                    it('status 200: No data provided in request body, returns unchanged article object', () => {
                         return request(app)
                             .patch('/api/articles/1')
                             .send({})
-                            .expect(400)
-                            .then(({ body: { msg } }) => {                                
-                                expect(msg).to.equal('Bad Request')
+                            .expect(200)
+                            .then(({ body: { votes } }) => {    
+                                expect(votes.votes).to.equal(100)
                             });                        
                     });
                     it('status 404: Valid but non-existant article_id', () => {
@@ -179,7 +179,7 @@ describe('app', () => {
                             .send({ username: 'butter_bridge' })
                             .expect(400)
                             .then(({ body: { msg } }) => {
-                                expect(msg).to.equal('bad request');
+                                expect(msg).to.equal('Bad Request');
                             });
                     });
                     it('status 400 -Non-existant column included in the post body', () => {
@@ -188,7 +188,7 @@ describe('app', () => {
                             .send({ username: 'butter_bridge', comment_text: 'test-comment' })
                             .expect(400)
                             .then(({ body: { msg } }) => {
-                                expect(msg).to.equal('bad request');
+                                expect(msg).to.equal('Bad Request');
                             });
                     });
                     it('status 400 - Data types of column values do not match schema', () => {
@@ -197,7 +197,7 @@ describe('app', () => {
                             .send({ username: 'butter_bridge', comment_text: 14211 })
                             .expect(400)
                             .then(({ body: { msg } }) => {
-                                expect(msg).to.equal('bad request');
+                                expect(msg).to.equal('Bad Request');
                             });
                     });
                     it('status 422 - article_id given is valid, but doesn\'t exist yet', () => {
@@ -249,7 +249,7 @@ describe('app', () => {
                             .get('/api/articles/1/comments?sort_by=title')
                             .expect(400)
                             .then(({ body: { msg } }) => {
-                                expect(msg).to.equal('bad request')
+                                expect(msg).to.equal('Bad Request')
                             });
                     });
                     it('Status 200 - If given an order query, order by desc by default', () => {
@@ -287,7 +287,7 @@ describe('app', () => {
                             .get('/api/articles')
                             .expect(200)
                             .then(({ body:  articles  }) => {     
-                                console.log(articles)                       
+                                               
                                 expect(articles[0]).keys('article_id', 'title', 'body', 'votes', 'topic', 'author', 'created_at', 'comment_count')
                             });
                     });
@@ -323,8 +323,8 @@ describe('app', () => {
                             return request(app)
                                 .get('/api/articles?sort_by=colour')
                                 .expect(400)
-                                .then(({ body: { msg } }) => {
-                                    expect(msg).to.equal('bad request')
+                                .then(({body:{msg}}) => {                                    
+                                    expect(msg).to.equal('Bad Request')
                                 });
                         });
                     });
@@ -361,7 +361,7 @@ describe('app', () => {
                                 .get('/api/articles?author=satnam_singh')
                                 .expect(404)
                                 .then(({ body: { msg } }) => {
-                                    expect(msg).to.equal('No articles found')
+                                    expect(msg).to.equal('No author found')
                                 });
                         });
                     });
@@ -412,13 +412,22 @@ describe('app', () => {
                     it('status 400: bad request - Incorrect data type in patch body', () => {
                         return request(app)
                             .patch('/api/comments/3')
-                            .send({ 'inc_votes': '9' })
+                            .send({ 'inc_votes': 'one' })
                             .expect(400)
                             .then(({ body: { msg } }) => {
                                 expect(msg).to.equal('Bad Request')
                             });
                     });
-                    it('status 404:valid but non-existant id passed', () => {
+                    it('status 200: No data provided in request body, returns unchanged comment object', () => {                       
+                            return request(app)
+                                .patch('/api/comments/1')
+                                .send({})
+                                .expect(200)
+                                .then(({ body: { votes } }) => { 
+                                    expect(votes.votes).to.equal(16)                                                                     
+                                });
+                    });
+                    it('status 404: valid but non-existant id passed', () => {
                         return request(app)
                             .patch('/api/comments/20')
                             .send({ 'inc-votes': 1 })

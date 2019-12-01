@@ -3,7 +3,7 @@ const connection = require('../db/connection');
 //----------------/articles----------------------------
 
 exports.fetchAllArticles = ({ sort_by, order, author, topic }) => {
-    return connection('articles')
+    return connection('articles')    
         .select('articles.*')
         .count('comment_id as comment_count')
         .modify(query => {
@@ -20,7 +20,7 @@ exports.checkAuthorExists = ({author}) => {
     .select('*')
     .where('username', author)
     .then(([author]) => {
-        if (!author) return Promise.reject({ status : 404, msg : 'No articles found' });
+        if (!author) return Promise.reject({ status : 404, msg : 'No author found' });
     });
 }
 
@@ -52,10 +52,7 @@ exports.fetchArticleByArticleId = (id) => {
         })        
 };
 
-exports.updateArticleVotesByArticleId = (id, vote_inc = 0) => {
-    if (typeof vote_inc === 'string' || vote_inc === 0) {
-        return Promise.reject({ status: 400, msg: 'Bad Request' })
-    }
+exports.updateArticleVotesByArticleId = (id, vote_inc = 0) => {    
     return connection('articles')
         .where('article_id', id)
         .increment('votes', vote_inc)
@@ -63,8 +60,9 @@ exports.updateArticleVotesByArticleId = (id, vote_inc = 0) => {
         .then((articleArray) => {
             if (articleArray.length === 0) {
                 return Promise.reject({ status: 404, msg: 'article not found' })
-            }
-            return articleArray;
+            } else {
+                return articleArray;
+            }            
         })
 }
 
@@ -94,7 +92,7 @@ exports.checkArticleExists = id => {
     return connection('articles')
     .select('*')
     .where('article_id', id)
-    .then(([comments]) => {
-        if (!comments) return Promise.reject({ status : 404, msg : 'article not found' });
+    .then(([articles]) => {
+        if (!articles) return Promise.reject({ status : 404, msg : 'article not found' });
     });
 }

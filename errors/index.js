@@ -9,7 +9,7 @@ exports.customHandlers = (err, req, res, next) => {
 exports.handle400s = (err, req, res, next) => {
     const errorCodes = ['22P02', '42703', '23502']
     if (errorCodes.includes(err.code)) {
-        res.status(400).send({ msg: 'bad request' })
+        res.status(400).send({ msg: 'Bad Request' })
     } else next(err)
 }
 

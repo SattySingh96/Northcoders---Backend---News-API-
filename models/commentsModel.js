@@ -3,13 +3,10 @@ const connection = require('../db/connection')
 
 //------------/comments/:comment_id--------------------
 
-exports.updateCommentVotesByArticleId = (id, patchBody) => {
-    if (typeof patchBody === 'string') {
-        return Promise.reject({ status: 400, msg: 'Bad Request' })
-    }
+exports.updateCommentVotesByArticleId = (id, vote_inc = 0) => {
     return connection('comments')
         .where('comment_id', id)
-        .increment('votes', patchBody)
+        .increment('votes', vote_inc)
         .returning('*')
         .then((commentArray) => {
             if (commentArray.length === 0) {
