@@ -104,9 +104,9 @@ describe('app', () => {
                                 expect(article.comment_count).is.equal('13')
                             });
                     });
-                    it.only('status 404: Valid but non-existant article_id', () => {
+                    it('status 404: Valid but non-existant article_id', () => {
                         return request(app)
-                            .get('/api/articles/999')                            
+                            .get('/api/articles/1000')                            
                             .expect(404)
                             .then(({ body: { msg } }) => {
                                 expect(msg).to.equal('article not found')
@@ -132,9 +132,18 @@ describe('app', () => {
                                 expect(msg).to.equal('Bad Request')
                             });
                     });
+                    it('status 400: bad request - Empty patch request, returns unchanged article object', () => {
+                        return request(app)
+                            .patch('/api/articles/1')
+                            .send({})
+                            .expect(400)
+                            .then(({ body: { msg } }) => {                                
+                                expect(msg).to.equal('Bad Request')
+                            });                        
+                    });
                     it('status 404: Valid but non-existant article_id', () => {
                         return request(app)
-                            .patch('/api/articles/20')
+                            .patch('/api/articles/1000')
                             .send({ 'inc_votes': 1 })
                             .expect(404)
                             .then(({ body: { msg } }) => {

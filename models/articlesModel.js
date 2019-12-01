@@ -52,8 +52,8 @@ exports.fetchArticleByArticleId = (id) => {
         })        
 };
 
-exports.updateArticleVotesByArticleId = (id, vote_inc) => {
-    if (typeof vote_inc === 'string') {
+exports.updateArticleVotesByArticleId = (id, vote_inc = 0) => {
+    if (typeof vote_inc === 'string' || vote_inc === 0) {
         return Promise.reject({ status: 400, msg: 'Bad Request' })
     }
     return connection('articles')
