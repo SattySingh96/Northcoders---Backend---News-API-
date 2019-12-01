@@ -72,7 +72,6 @@ exports.checkArticleExists = id => {
     .select('*')
     .where('article_id', id)
     .then(([comments]) => {
-        console.log([comments][0])
-        if (typeof [comments][0] === undefined) return Promise.reject({ status : 404, msg : 'article not found' });
+        if (!comments) return Promise.reject({ status : 404, msg : 'article not found' });
     });
 }

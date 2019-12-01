@@ -195,7 +195,7 @@ describe('app', () => {
                     });
                 });
                 describe('GET', () => {
-                    it.only('Status 200 - Return array of comment objects, each having 5 keys, if the article exists', () => {
+                    it('Status 200 - Return array of comment objects, each having 5 keys, if the article exists', () => {
                         return request(app)
                             .get('/api/articles/1/comments')
                             .expect(200)
@@ -204,7 +204,7 @@ describe('app', () => {
                                 expect(comments.length).to.equal(13)
                             });
                     });
-                    it.only('Status 404 - article_id given is valid, but doesn\'t exist yet', () => {
+                    it('Status 404 - article_id given is valid, but doesn\'t exist yet', () => {
                         return request(app)
                             .get('/api/articles/99999/comments')
                             .expect(404)
