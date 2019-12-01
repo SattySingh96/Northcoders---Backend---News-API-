@@ -61,9 +61,18 @@ exports.addCommentByArticleId = (id, body) => {
 }
 
 exports.fetchCommentsByArticleId = (id, { sort_by, order }) => {
-    return connection
+    return connection('comments')
         .select('comment_id', 'author', 'votes', 'created_at', 'body')
-        .from('comments')
         .where('article_id', id)
         .orderBy(sort_by || "created_at", order || 'desc')
+}
+
+exports.checkArticleExists = id => {
+    return connection('articles')
+    .select('*')
+    .where('article_id', id)
+    .then(([comments]) => {
+        console.log([comments][0])
+        if (typeof [comments][0] === undefined) return Promise.reject({ status : 404, msg : 'article not found' });
+    });
 }

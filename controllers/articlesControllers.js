@@ -1,4 +1,4 @@
-const { fetchAllArticles, fetchArticleByArticleId, updateArticleVotesByArticleId, addCommentByArticleId, fetchCommentsByArticleId } = require('../models/articlesModel')
+const { fetchAllArticles, fetchArticleByArticleId, updateArticleVotesByArticleId, addCommentByArticleId, fetchCommentsByArticleId, checkArticleExists } = require('../models/articlesModel')
 
 //--------------------/articles-----------------------------
 exports.getAllArticles = (req, res, next) => {
@@ -44,9 +44,10 @@ exports.postCommentByArticleId = (req, res, next) => {
 }
 
 exports.getCommentsByArticleId = (req, res, next) => {
-    fetchCommentsByArticleId(req.params.article_id, req.query)
-        .then((comments) => {
+    const id = req.params.article_id;
+    Promise.all([fetchCommentsByArticleId(id, req.query)], checkArticleExists(id))
+        .then(([comments]) => {
             res.status(200).send({ comments })
         })
-        .catch(next)
+        .catch(next);
 }

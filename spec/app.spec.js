@@ -184,7 +184,7 @@ describe('app', () => {
                                 expect(msg).to.equal('bad request');
                             });
                     });
-                    it('status 422 - article_id given is non-existant', () => {
+                    it('status 422 - article_id given is valid, but doesn\'t exist yet', () => {
                         return request(app)
                             .post('/api/articles/9999/comments')
                             .send({ username: 'butter_bridge', body: 'test-comment' })
@@ -195,7 +195,7 @@ describe('app', () => {
                     });
                 });
                 describe('GET', () => {
-                    it('Status 200 - Return array of comment objects, each having 5 keys', () => {
+                    it.only('Status 200 - Return array of comment objects, each having 5 keys, if the article exists', () => {
                         return request(app)
                             .get('/api/articles/1/comments')
                             .expect(200)
@@ -203,6 +203,14 @@ describe('app', () => {
                                 expect(comments[0]).keys('comment_id', 'author', 'votes', 'created_at', 'body')
                                 expect(comments.length).to.equal(13)
                             });
+                    });
+                    it.only('Status 404 - article_id given is valid, but doesn\'t exist yet', () => {
+                        return request(app)
+                            .get('/api/articles/99999/comments')
+                            .expect(404)
+                            .then(({ body: { msg } }) => {
+                                expect(msg).to.equal('article not found')
+                            })
                     });
                     it('Status 200 - If no sort_by query is given, sort descendingly by "created_at" by default', () => {
                         return request(app)

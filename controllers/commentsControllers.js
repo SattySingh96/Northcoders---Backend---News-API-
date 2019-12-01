@@ -14,6 +14,7 @@ exports.patchCommentVoteByArticleId = (req, res, next) => {
 
 exports.deleteCommentbyArticleId = (req, res, next) => {
     removeCommentByArticleId(req.params.comment_id).then(() => {
-        res.status(204).send()
-    });
+            res.status(204).send()
+        })
+        .catch(next)
 };
