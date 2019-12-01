@@ -1,22 +1,19 @@
-const { updateCommentVotesById, removeCommentById } = require('../models/commentsModel')
+const { updateCommentVotesByArticleId, removeCommentByArticleId } = require('../models/commentsModel')
 
 
 
 //-----------/comments/:comment_id-----------------
 
-exports.patchCommentVoteById = (req, res, next) => {
-  console.log('sending patch')
-  updateCommentVotesById(req.params.comment_id, req.body['inc_votes'])
-    .then((patchedBody) => {
-      console.log(patchedBody)
-      res.status(200).send({ patchedBody: patchedBody[0] })
-    })
-    .catch(next)
+exports.patchCommentVoteByArticleId = (req, res, next) => {
+    updateCommentVotesByArticleId(req.params.comment_id, req.body.inc_votes)
+        .then((votes) => {
+            res.status(200).send({ votes: votes[0] })
+        })
+        .catch(next)
 }
 
-exports.deleteCommentbyId = (req, res, next) => {
-  console.log('sending delete')
-  removeCommentById(req.params.comment_id).then(() => {
-    res.status(204).send()
-  });
+exports.deleteCommentbyArticleId = (req, res, next) => {
+    removeCommentByArticleId(req.params.comment_id).then(() => {
+        res.status(204).send()
+    });
 };
