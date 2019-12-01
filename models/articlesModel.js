@@ -3,10 +3,9 @@ const connection = require('../db/connection');
 //----------------/articles----------------------------
 
 exports.fetchAllArticles = ({ sort_by, order, author, topic }) => {
-    return connection
+    return connection('articles')
         .select('articles.*')
         .count('comment_id as comment_count')
-        .from('articles')
         .modify(query => {
             if (author) query.where('articles.author', author)
             if (topic) query.where('articles.topic', topic)
@@ -14,6 +13,24 @@ exports.fetchAllArticles = ({ sort_by, order, author, topic }) => {
         .leftJoin('comments', 'articles.article_id', 'comments.article_id')
         .groupBy('articles.article_id')
         .orderBy(sort_by || "created_at", order || 'desc')
+}
+
+exports.checkAuthorExists = ({author}) => {
+    return connection('users')
+    .select('*')
+    .where('username', author)
+    .then(([author]) => {
+        if (!author) return Promise.reject({ status : 404, msg : 'No articles found' });
+    });
+}
+
+exports.checkTopicExists = ({topic}) => {
+    return connection('topics')
+    .select('*')
+    .where('slug', topic)
+    .then(([topic]) => {
+        if (!topic) return Promise.reject({ status : 404, msg : 'No articles found' });
+    });
 }
 
 //-----------------/articles/:article_id--------------------

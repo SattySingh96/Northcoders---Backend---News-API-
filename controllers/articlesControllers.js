@@ -1,19 +1,15 @@
-const { fetchAllArticles, fetchArticleByArticleId, updateArticleVotesByArticleId, addCommentByArticleId, fetchCommentsByArticleId, checkArticleExists } = require('../models/articlesModel')
+const { fetchAllArticles, fetchArticleByArticleId, updateArticleVotesByArticleId, addCommentByArticleId, fetchCommentsByArticleId, checkArticleExists, checkAuthorExists } = require('../models/articlesModel')
 
 //--------------------/articles-----------------------------
 exports.getAllArticles = (req, res, next) => {
-    fetchAllArticles(req.query)
-        .then((articles) => {
-            if (articles.length === 0) {
-                return Promise.reject({
-                    status: 404,
-                    msg: 'No articles found'
-                })
-            }
-            res.status(200).send({ articles: articles })
-        })
-        .catch(next);
+    Promise.all([fetchAllArticles(req.query), checkAuthorExists(req.query)])
+    .then(([articles])=>{
+        //console.log(articles)
+        res.status(200).send(articles);
+    })
+    .catch(next);
 }
+
 
 // -----------------/articles/:article_id--------------------
 

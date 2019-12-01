@@ -328,14 +328,15 @@ describe('app', () => {
                                 });
                         });
                     });
-                    describe('/articles?author=', () => {
+                    describe.only('/articles?author=', () => {
                         it('Status 200 - If given an author query, return articles by that author', () => {
                             return request(app)
                                 .get('/api/articles?author=butter_bridge')
                                 .expect(200)
-                                .then(({ body: { articles } }) => {
-                                    expect(articles).to.be.descendingBy('created_at')
-                                    expect(articles[0].author).to.equal('butter_bridge')
+                                .then(({body:body}) => {
+                                    console.log(body)
+                                    expect(body).to.be.descendingBy('created_at')
+                                    expect(body[0].author).to.equal('butter_bridge')
                                 });
                         });
                         it('status 404 - where author is valid but non-existant at this time', () => {
