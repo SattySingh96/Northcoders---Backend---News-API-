@@ -11,6 +11,7 @@ app.use('/api', apiRouter)
 
 //---Error Handler(404)---
 app.all('/*', handle404s)
+app.all('/*', handle405s)
 
 
 //---Error Handlers---

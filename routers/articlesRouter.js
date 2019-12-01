@@ -12,13 +12,13 @@ articlesRouter.route('/:article_id')
     .get(getArticleByArticleId)
     .patch(patchArticleVoteByArticleId)
     .all(handle405s)
-    .all(handle404s)
+   
 
 articlesRouter.route('/:article_id/comments')
     .get(getCommentsByArticleId)
     .post(postCommentByArticleId)
     .all(handle405s)
-    .all(handle404s)
+   
 
 
 

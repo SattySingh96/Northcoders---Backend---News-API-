@@ -71,10 +71,19 @@ describe('app', () => {
                                 expect(user).to.be.an('object')
                             })
                     });
+                    it('status 404: Valid, but non-existant user_id', () => {
+                        return request(app)
+                            .get('/api/users/satty_singh96')
+                            .expect(404)
+                            .then(({ body: { msg } }) => {
+                                expect(msg).to.equal('user not found');
+                                
+                            })
+                    });
                 });
             });
         });
-        describe('/articles', () => {
+        describe.only('/articles', () => {
             describe('/:article_id', () => {
                 it('status 405: methods not allowed, Delete, Put, Post', () => {
                     const methods = ['delete', 'put', 'post'].map((method) => {
@@ -104,7 +113,7 @@ describe('app', () => {
                                 expect(article.comment_count).is.equal('13')
                             });
                     });
-                    it('status 404: Valid but non-existant article_id', () => {
+                    it('status 404: Valid, but non-existant article_id', () => {
                         return request(app)
                             .get('/api/articles/1000')                            
                             .expect(404)
