@@ -265,12 +265,13 @@ describe('app', () => {
                     });
                     return Promise.all(methods);
                 });
-                describe('GET', () => {
+                describe.only('GET', () => {
                     it('Status 200: Return an array of articles objects, each having 8 keys', () => {
                         return request(app)
                             .get('/api/articles')
                             .expect(200)
-                            .then(({ body: { articles } }) => {
+                            .then(({ body:  articles  }) => {     
+                                console.log(articles)                       
                                 expect(articles[0]).keys('article_id', 'title', 'body', 'votes', 'topic', 'author', 'created_at', 'comment_count')
                             });
                     });
@@ -278,7 +279,7 @@ describe('app', () => {
                         return request(app)
                             .get('/api/articles')
                             .expect(200)
-                            .then(({ body: { articles } }) => {
+                            .then(({ body: articles }) => {
                                 expect(articles[0].comment_count).equals('13')
                             });
                     });
@@ -287,7 +288,8 @@ describe('app', () => {
                             return request(app)
                                 .get('/api/articles')
                                 .expect(200)
-                                .then(({ body: { articles } }) => {
+                                .then(({ body: articles }) => {
+                                    
                                     expect(articles).to.be.sortedBy('created_at', { descending: true });
                                 });
                         });
@@ -295,7 +297,7 @@ describe('app', () => {
                             return request(app)
                                 .get('/api/articles?sort_by=author')
                                 .expect(200)
-                                .then(({ body: { articles } }) => {
+                                .then(({ body: articles }) => {                                    
                                     expect(articles).to.be.sortedBy('author', {
                                         descending: true
                                     });
@@ -323,20 +325,19 @@ describe('app', () => {
                             return request(app)
                                 .get('/api/articles?order=asc')
                                 .expect(200)
-                                .then(({ body: { articles } }) => {
+                                .then(({ body: articles }) => {
                                     expect(articles).to.be.ascendingBy('created_at')
                                 });
                         });
                     });
-                    describe.only('/articles?author=', () => {
+                    describe('/articles?author=', () => {
                         it('Status 200 - If given an author query, return articles by that author', () => {
                             return request(app)
                                 .get('/api/articles?author=butter_bridge')
                                 .expect(200)
-                                .then(({body:body}) => {
-                                    console.log(body)
-                                    expect(body).to.be.descendingBy('created_at')
-                                    expect(body[0].author).to.equal('butter_bridge')
+                                .then(({body:articles}) => {
+                                    expect(articles).to.be.descendingBy('created_at')
+                                    expect(articles[0].author).to.equal('butter_bridge')
                                 });
                         });
                         it('status 404 - where author is valid but non-existant at this time', () => {
@@ -353,7 +354,7 @@ describe('app', () => {
                             return request(app)
                                 .get('/api/articles?topic=mitch')
                                 .expect(200)
-                                .then(({ body: { articles } }) => {
+                                .then(({ body: articles }) => {
                                     expect(articles).to.be.descendingBy('created_at')
                                     expect(articles[0].topic).to.equal('mitch')
                                 });

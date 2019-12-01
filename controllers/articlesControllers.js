@@ -1,14 +1,14 @@
-const { fetchAllArticles, fetchArticleByArticleId, updateArticleVotesByArticleId, addCommentByArticleId, fetchCommentsByArticleId, checkArticleExists, checkAuthorExists } = require('../models/articlesModel')
+const { fetchAllArticles, fetchArticleByArticleId, updateArticleVotesByArticleId, addCommentByArticleId, fetchCommentsByArticleId, checkArticleExists, checkAuthorExists, checkTopicExists } = require('../models/articlesModel')
 
 //--------------------/articles-----------------------------
 exports.getAllArticles = (req, res, next) => {
-    Promise.all([fetchAllArticles(req.query), checkAuthorExists(req.query)])
-    .then(([articles])=>{
-        //console.log(articles)
-        res.status(200).send(articles);
-    })
-    .catch(next);
+   fetchAllArticles(req.query)
+    .then((articles) => {        
+           res.status(200).send(articles);
+       })
+       .catch(next);
 }
+  
 
 
 // -----------------/articles/:article_id--------------------
