@@ -5,35 +5,35 @@ const { fetchAllArticles, fetchArticleByArticleId, updateArticleVotesByArticleId
 exports.getAllArticles = (req, res, next) => {
     if (!req.query.hasOwnProperty('author') && !req.query.hasOwnProperty('topic')) {
         fetchAllArticles(req.query)
-        .then((articles)=>{
-            res.status(200).send(articles);
-       })
-       .catch(next)
-   }
+            .then((articles) => {
+                res.status(200).send({ articles: articles });
+            })
+            .catch(next)
+    }
     else if (req.query.hasOwnProperty('author') && !req.query.hasOwnProperty('topic')) {
         Promise.all([fetchAllArticles(req.query), checkAuthorExists(req.query)])
-    .then((articles) => {        
-           res.status(200).send(articles[0]);
-       })
-       .catch(next);
+            .then((articles) => {
+                res.status(200).send({ articles: articles[0] });
+            })
+            .catch(next);
     }
     else if (req.query.hasOwnProperty('topic') && !req.query.hasOwnProperty('author')) {
-       
+
         Promise.all([fetchAllArticles(req.query), checkTopicExists(req.query)])
-    .then((articles) => {        
-           res.status(200).send(articles[0]);
-       })
-       .catch(next);
+            .then((articles) => {
+                res.status(200).send({ articles: articles[0] });
+            })
+            .catch(next);
     }
     else if (req.query.hasOwnProperty('author') && req.query.hasOwnProperty('topic')) {
-        
+
         Promise.all([fetchAllArticles(req.query), checkAuthorExists(req.query), checkTopicExists(req.query)])
-    .then((articles) => {        
-           res.status(200).send(articles);
-       })
-       .catch(next);
-    }   
-    
+            .then((articles) => {
+                res.status(200).send({ articles: articles });
+            })
+            .catch(next);
+    }
+
 }
 
 
@@ -59,8 +59,8 @@ exports.getArticleByArticleId = (req, res, next) => {
 
 exports.patchArticleVoteByArticleId = (req, res, next) => {
     updateArticleVotesByArticleId(req.params.article_id, req.body.inc_votes)
-        .then((votes) => {
-            res.status(200).send({ votes: votes[0] })
+        .then((updatedVotes) => {
+            res.status(200).send({ article: updatedVotes[0] })
         })
         .catch(next)
 }
@@ -70,7 +70,7 @@ exports.patchArticleVoteByArticleId = (req, res, next) => {
 exports.postCommentByArticleId = (req, res, next) => {
     addCommentByArticleId(req.params.article_id, req.body)
         .then((comments) => {
-            res.status(201).send(comments[0])
+            res.status(201).send({ comment: comments[0] })
         })
         .catch(next);
 }

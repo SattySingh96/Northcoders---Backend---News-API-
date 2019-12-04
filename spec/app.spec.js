@@ -87,7 +87,7 @@ describe('app', () => {
                             .expect(404)
                             .then(({ body: { msg } }) => {
                                 expect(msg).to.equal('user not found');
-                                
+
                             })
                     });
                 });
@@ -125,7 +125,7 @@ describe('app', () => {
                     });
                     it('status 404: Valid, but non-existant article_id', () => {
                         return request(app)
-                            .get('/api/articles/1000')                            
+                            .get('/api/articles/1000')
                             .expect(404)
                             .then(({ body: { msg } }) => {
                                 expect(msg).to.equal('article not found')
@@ -138,8 +138,8 @@ describe('app', () => {
                             .patch('/api/articles/1')
                             .send({ 'inc_votes': 1 })
                             .expect(200)
-                            .then(({ body: { votes } }) => {
-                                expect(votes.votes).to.equal(101)
+                            .then(({ body: { article } }) => {
+                                expect(article.votes).to.equal(101)
                             });
                     });
                     it('status 400: bad request - Incorrect data type in patch body', () => {
@@ -156,9 +156,9 @@ describe('app', () => {
                             .patch('/api/articles/1')
                             .send({})
                             .expect(200)
-                            .then(({ body: { votes } }) => {    
-                                expect(votes.votes).to.equal(100)
-                            });                        
+                            .then(({ body: { article } }) => {
+                                expect(article.votes).to.equal(100)
+                            });
                     });
                     it('status 404: Valid but non-existant article_id', () => {
                         return request(app)
@@ -182,14 +182,14 @@ describe('app', () => {
                     });
                     return Promise.all(methods);
                 });
-                describe('POST', () => {
+                describe.only('POST', () => {
                     it('status 201 - returns posted comment object, with 6 keys', () => {
                         return request(app)
                             .post('/api/articles/1/comments')
                             .send({ username: 'butter_bridge', body: 'Test comment' })
                             .expect(201)
-                            .then(({ body }) => {
-                                expect(body).keys('comment_id', 'author', 'article_id', 'votes', 'created_at', 'body')
+                            .then(({ body: comment }) => {
+                                expect(comment.comment).keys('comment_id', 'author', 'article_id', 'votes', 'created_at', 'body')
                             });
                     });
                     it('status 400 - Number of columns in post body is less than the number of columns in the recipient table', () => {
@@ -305,9 +305,8 @@ describe('app', () => {
                         return request(app)
                             .get('/api/articles')
                             .expect(200)
-                            .then(({ body:  articles  }) => {     
-                                               
-                                expect(articles[0]).keys('article_id', 'title', 'body', 'votes', 'topic', 'author', 'created_at', 'comment_count')
+                            .then(({ body: articles }) => {
+                                expect(articles.articles[0]).keys('article_id', 'title', 'body', 'votes', 'topic', 'author', 'created_at', 'comment_count')
                             });
                     });
                     it('Status 200: Comment_count key value should be equal to the number of comments refrenced on the article', () => {
@@ -315,7 +314,7 @@ describe('app', () => {
                             .get('/api/articles')
                             .expect(200)
                             .then(({ body: articles }) => {
-                                expect(articles[0].comment_count).equals('13')
+                                expect(articles.articles[0].comment_count).equals('13')
                             });
                     });
                     describe('/articles?sort_by=', () => {
@@ -324,16 +323,15 @@ describe('app', () => {
                                 .get('/api/articles')
                                 .expect(200)
                                 .then(({ body: articles }) => {
-                                    
-                                    expect(articles).to.be.sortedBy('created_at', { descending: true });
+                                    expect(articles.articles).to.be.sortedBy('created_at', { descending: true });
                                 });
                         });
                         it('Status 200 - If given a sort_by query, sort comments by this criteria', () => {
                             return request(app)
                                 .get('/api/articles?sort_by=author')
                                 .expect(200)
-                                .then(({ body: articles }) => {                                    
-                                    expect(articles).to.be.sortedBy('author', {
+                                .then(({ body: articles }) => {
+                                    expect(articles.articles).to.be.sortedBy('author', {
                                         descending: true
                                     });
                                 });
@@ -342,7 +340,7 @@ describe('app', () => {
                             return request(app)
                                 .get('/api/articles?sort_by=colour')
                                 .expect(400)
-                                .then(({body:{msg}}) => {                                    
+                                .then(({ body: { msg } }) => {
                                     expect(msg).to.equal('Bad Request')
                                 });
                         });
@@ -350,10 +348,10 @@ describe('app', () => {
                     describe('/articles?order=', () => {
                         it('Status 200 - If given an order query, order by desc by default', () => {
                             return request(app)
-                                .get('/api/articles/1/comments?order=desc')
+                                .get('/api/articles?order=desc')
                                 .expect(200)
-                                .then(({ body: { comments } }) => {
-                                    expect(comments).to.be.descendingBy('created_at')
+                                .then(({ body: articles }) => {
+                                    expect(articles.articles).to.be.descendingBy('created_at')
                                 });
                         });
                         it('Status 200 - If given an order query of asc/desc, order by asc/desc', () => {
@@ -361,7 +359,7 @@ describe('app', () => {
                                 .get('/api/articles?order=asc')
                                 .expect(200)
                                 .then(({ body: articles }) => {
-                                    expect(articles).to.be.ascendingBy('created_at')
+                                    expect(articles.articles).to.be.ascendingBy('created_at')
                                 });
                         });
                     });
@@ -370,9 +368,9 @@ describe('app', () => {
                             return request(app)
                                 .get('/api/articles?author=butter_bridge')
                                 .expect(200)
-                                .then(({body:articles}) => {
-                                    expect(articles).to.be.descendingBy('created_at')
-                                    expect(articles[0].author).to.equal('butter_bridge')
+                                .then(({ body: articles }) => {
+                                    expect(articles.articles).to.be.descendingBy('created_at')
+                                    expect(articles.articles[0].author).to.equal('butter_bridge')
                                 });
                         });
                         it('status 404 - where author is valid but non-existant at this time', () => {
@@ -390,8 +388,8 @@ describe('app', () => {
                                 .get('/api/articles?topic=mitch')
                                 .expect(200)
                                 .then(({ body: articles }) => {
-                                    expect(articles).to.be.descendingBy('created_at')
-                                    expect(articles[0].topic).to.equal('mitch')
+                                    expect(articles.articles).to.be.descendingBy('created_at')
+                                    expect(articles.articles[0].topic).to.equal('mitch')
                                 });
                         });
                         it('status 404 - where topic is valid but non-existant at this time', () => {
@@ -437,14 +435,14 @@ describe('app', () => {
                                 expect(msg).to.equal('Bad Request')
                             });
                     });
-                    it('status 200: No data provided in request body, returns unchanged comment object', () => {                       
-                            return request(app)
-                                .patch('/api/comments/1')
-                                .send({})
-                                .expect(200)
-                                .then(({ body: { votes } }) => { 
-                                    expect(votes.votes).to.equal(16)                                                                     
-                                });
+                    it('status 200: No data provided in request body, returns unchanged comment object', () => {
+                        return request(app)
+                            .patch('/api/comments/1')
+                            .send({})
+                            .expect(200)
+                            .then(({ body: { votes } }) => {
+                                expect(votes.votes).to.equal(16)
+                            });
                     });
                     it('status 404: valid but non-existant id passed', () => {
                         return request(app)
@@ -464,15 +462,15 @@ describe('app', () => {
                     });
                     it('Status 400: Invalid, non-existant comment_id', () => {
                         return request(app)
-                            .delete('/api/comments/text')                          
+                            .delete('/api/comments/text')
                             .expect(400)
                             .then(({ body: { msg } }) => {
                                 expect(msg).to.equal('Bad Request')
                             });
                     });
-                    it.only('Status 404: Valid, non-existant comment_id', () => {
+                    it('Status 404: Valid, non-existant comment_id', () => {
                         return request(app)
-                            .delete('/api/comments/1000')                          
+                            .delete('/api/comments/1000')
                             .expect(404)
                             .then(({ body: { msg } }) => {
                                 expect(msg).to.equal('Comment not found')
