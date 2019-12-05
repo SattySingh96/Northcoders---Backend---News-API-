@@ -182,13 +182,14 @@ describe('app', () => {
                     });
                     return Promise.all(methods);
                 });
-                describe.only('POST', () => {
+                describe('POST', () => {
                     it('status 201 - returns posted comment object, with 6 keys', () => {
                         return request(app)
                             .post('/api/articles/1/comments')
                             .send({ username: 'butter_bridge', body: 'Test comment' })
                             .expect(201)
                             .then(({ body: comment }) => {
+                                console.log(comment)
                                 expect(comment.comment).keys('comment_id', 'author', 'article_id', 'votes', 'created_at', 'body')
                             });
                     });
@@ -422,8 +423,8 @@ describe('app', () => {
                             .patch('/api/comments/1')
                             .send({ 'inc_votes': 1 })
                             .expect(200)
-                            .then(({ body: { votes } }) => {
-                                expect(votes.votes).to.equal(17)
+                            .then(({ body: { comment } }) => {
+                                expect(comment.votes).to.equal(17)
                             });
                     });
                     it('status 400: bad request - Incorrect data type in patch body', () => {
@@ -440,8 +441,8 @@ describe('app', () => {
                             .patch('/api/comments/1')
                             .send({})
                             .expect(200)
-                            .then(({ body: { votes } }) => {
-                                expect(votes.votes).to.equal(16)
+                            .then(({ body: { comment } }) => {
+                                expect(comment.votes).to.equal(16)
                             });
                     });
                     it('status 404: valid but non-existant id passed', () => {
