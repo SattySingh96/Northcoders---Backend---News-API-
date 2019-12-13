@@ -189,7 +189,6 @@ describe('app', () => {
                             .send({ username: 'butter_bridge', body: 'Test comment' })
                             .expect(201)
                             .then(({ body: comment }) => {
-                                console.log(comment)
                                 expect(comment.comment).keys('comment_id', 'author', 'article_id', 'votes', 'created_at', 'body')
                             });
                     });
