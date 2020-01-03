@@ -188,8 +188,7 @@ describe('app', () => {
                             .post('/api/articles/1/comments')
                             .send({ username: 'butter_bridge', body: 'Test comment' })
                             .expect(201)
-                            .then(({ body: comment }) => {
-                                console.log(comment)
+                            .then(({ body: comment }) => {                                
                                 expect(comment.comment).keys('comment_id', 'author', 'article_id', 'votes', 'created_at', 'body')
                             });
                     });
@@ -260,7 +259,7 @@ describe('app', () => {
                         return request(app)
                             .get('/api/articles/1/comments?sort_by=author')
                             .expect(200)
-                            .then(({ body: { comments } }) => {
+                            .then(({ body: { comments } }) => {                               
                                 expect(comments).to.be.sortedBy('author', { descending: true });
                             });
                     });
@@ -268,7 +267,7 @@ describe('app', () => {
                         return request(app)
                             .get('/api/articles/1/comments?sort_by=title')
                             .expect(400)
-                            .then(({ body: { msg } }) => {
+                            .then(({ body: { msg } }) => {                                
                                 expect(msg).to.equal('Bad Request')
                             });
                     });

@@ -1,27 +1,107 @@
 {
   "GET /api": {
-    "description": "serves up a json representation of all the available endpoints of the api"
+    "description": "Serves up a json representation of all the available endpoints of the api"
   },
+  
   "GET /api/topics": {
-    "description": "serves an array of all topics",
+    "description": "Serves an array of all topics",
     "queries": [],
     "exampleResponse": {
       "topics": [{ "slug": "football", "description": "Footie!" }]
     }
   },
+
+  "GET /api/users/:username":{
+    "description":"Serves an object containing the specific users information",
+    "queries":[],
+    "exampleResponse": {
+      "user": {
+        "username": "weegembump",
+        "avatar_url": "https://www.upandrunning.co.uk/media/catalog/product/cache/1/image/650x/040ec09b1e35df139433887a97daa66f/m/r/mr-bump.jpg",
+        "name": "Gemma Bump"
+      }
+    }
+  },
+
+  "GET /api/articles/:article_id":{
+    "description":"Serves an object containing the specific articles information",
+    "queries":[],
+    "exampleResponse": {
+      "article": {
+        "article_id": 1,
+        "title": "Running a Node App",
+        "body": "This is part two of a series on how to get up and running with Systemd and Node.js. This part dives deeper into how to successfully run your app with systemd long-term, and how to set it up in a production environment.",
+        "votes": 0,
+        "topic": "coding",
+        "author": "jessjelly",
+        "created_at": "2016-08-18T12:07:52.389Z",
+        "comment_count": "8"
+      }
+    }
+  },
+
+  "PATCH /api/articles/:article_id":{
+    "description":"Allows the updating of the vote count for a specific article",
+    "queries":[],
+    "exampleResponse": "No response returned"
+  },
+
+  "GET /api/articles/:article_id/comments":{
+    "description":"Serves an array of all comments for the specific article",
+    "queries":["sort_by - Any valid column name, defaults to created_at", "order - defaults to descending"],
+    "exampleResponse": {
+      "comments": [
+        {
+          "comment_id": 286,
+          "author": "cooljmessy",
+          "votes": 19,
+          "created_at": "2017-07-05T12:15:40.563Z",
+          "body": "Ut accusamus enim vel voluptate quae temporibus labore neque a. Reprehenderit iste est eos velit fugit vel quod velit."
+        }
+      ]
+    } 
+  },
+
+  "POST /api/articles/:article_id/comments":{
+    "description":"Allows the adding of a new comment to a specific article, returns the new comment",
+    "queries":[],
+    "exampleResponse": {
+      "comment": {
+        "comment_id": 19,
+        "author": "butter_bridge",
+        "article_id": 1,
+        "votes": 0,
+        "created_at": "2020-01-02T23:53:13.267Z",
+        "body": "Test comment"
+      }
+    }
+  },
+
   "GET /api/articles": {
-    "description": "serves an array of all topics",
-    "queries": ["author", "topic", "sort_by", "order"],
+    "description": "serves an array of all articles",
+    "queries": ["sort_by - author, topic, sort_by, order"],
     "exampleResponse": {
       "articles": [
         {
           "title": "Seafood substitutions are increasing",
           "topic": "cooking",
           "author": "weegembump",
-          "body": "Text from the article..",
+          "body": "Text from the article.",
           "created_at": 1527695953341
         }
       ]
     }
+  },
+
+  "PATCH /api/comments": {
+    "description": "Allows the updating of the vote count for a specific comment",
+    "queries": [],
+    "exampleResponse": "No response returned"
+  },
+
+  "DELETE /api/comments/:comment_id": {
+    "description": "Deletes comment linked to specific comment ID ",
+    "queries": [],
+    "exampleResponse": "No response returned"
   }
 }
