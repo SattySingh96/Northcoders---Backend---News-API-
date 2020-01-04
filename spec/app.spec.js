@@ -196,7 +196,7 @@ describe('app', () => {
                             .post('/api/articles/1/comments')
                             .send({ username: 'butter_bridge', body: 'Test comment' })
                             .expect(201)
-                            .then(({ body: comment }) => {                                
+                            .then(({ body: comment }) => {
                                 expect(comment.comment).keys('comment_id', 'author', 'article_id', 'votes', 'created_at', 'body')
                             });
                     });
