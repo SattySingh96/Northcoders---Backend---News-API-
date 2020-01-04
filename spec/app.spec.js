@@ -17,6 +17,14 @@ beforeEach(() => {
 
 describe('app', () => {
     describe('/api', () => {
+        it('status 200: gets a JSON object of all possible endpoints', () => {
+            return request(app)
+                .get('/api')
+                .expect(200)
+                .then(({body: { data } }) => {
+                    expect(data).to.be.an('object');
+                });            
+        });
         it('status 405: methods not allowed, Delete', () => {
             const methods = ['delete', 'post', 'patch', 'put'].map((method) => {
                 return request(app)[method]('/api')
