@@ -1,6 +1,6 @@
 # Northcoders Backend News API
 
-An API designed to allow interaction with the news stories coming out of Northcoders Leeds.
+An API designed to host news articles, allows interaction with articles, comments, topics and users.
 
 ## Getting Setup
 
